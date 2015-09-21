@@ -23,7 +23,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Assignment Name
-set(COMP308_ASSIGNMENT "Project" CACHE STRING "COMP308 Assignment Name")
+set(COMP308_ASSIGNMENT "Final Project" CACHE STRING "COMP308 Assignment Name")
 
 # Project
 project("COMP308_${COMP308_ASSIGNMENT}" CXX C)

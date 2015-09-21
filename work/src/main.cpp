@@ -34,7 +34,7 @@ GLuint g_winHeight = 480;
 GLuint g_winSecWidth = 320;
 GLuint g_winSecHeight = 240;
 GLuint g_mainWindow = 0;
-GLuint g_secondWindow = 1;
+
 
 // Projection values
 // 
@@ -54,7 +54,7 @@ float g_zoomFactor = 1.0;
 int maxX, maxY;
 // Geometry loader and drawer
 //
-Skeleton *g_skeleton = nullptr;
+
 Geometry *g_geometry = nullptr;
 
 
@@ -95,7 +95,7 @@ void menu(int item)
 	{
 		if (g_geometry != nullptr) {
 			if (spline->ready()) {
-			//	vector<vec3> temp = spline->getNavPoints();
+				//	vector<vec3> temp = spline->getNavPoints();
 
 
 
@@ -125,7 +125,7 @@ void menu(int item)
 		if (g_geometry != nullptr) {
 			g_geometry->clearTrans();
 		}
-		
+
 	}break;
 	}
 	glutPostRedisplay();
@@ -140,10 +140,10 @@ void setUpCamera() {
 	// Set up the projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(g_fovy, float(g_winWidth) / float(g_winHeight), 
+	gluPerspective(g_fovy, float(g_winWidth) / float(g_winHeight),
 		g_znear, g_zfar);
-	             
-	
+
+
 
 	if (g_geometry != nullptr) {
 		g_znear = -5;
@@ -161,39 +161,6 @@ void setUpCamera() {
 	//	gluLookAt(g_winWidth / 2, g_winHeight / 2, 0, g_winWidth / 2, g_winHeight / 2,0, 0, 1, 0);
 }
 
-void secondDraw() {
-	// Set up camera every frame
-	setUpCamera();
-
-	// Black background
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Enable flags for normal rendering
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_NORMALIZE);
-	glEnable(GL_COLOR_MATERIAL);
-
-
-	// Set the current material (for all objects) to red
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	
-	speed->renderSpline();
-	
-
-	
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
-	glDisable(GL_NORMALIZE);
-	glDisable(GL_COLOR_MATERIAL);
-
-	glutSwapBuffers();
-
-	// Queue the next frame to be drawn straight away
-	glutPostRedisplay();
-}
 
 // Draw function
 //
@@ -218,13 +185,9 @@ void draw() {
 	glColor3f(1.0f, 0.0f, 0.0f);
 
 
-	if (g_skeleton != nullptr) {
-		// Render geometry
-		g_skeleton->renderSkeleton();
-	}
-	else {
-			g_geometry->renderGeometry();
-	}
+
+	g_geometry->renderGeometry();
+
 
 	spline->renderSpline();
 	// Disable flags for cleanup (optional)
@@ -239,17 +202,7 @@ void draw() {
 	glutPostRedisplay();
 }
 
-// Reshape function
-// 
-void secondReshape(int w, int h) {
-	if (h == 0) h = 1;
 
-	g_winSecWidth = w;
-	g_winSecHeight = h;
-
-	// Sets the openGL rendering window to match the window size
-	glViewport(0, 0, g_winSecWidth, g_winSecHeight);
-}
 // Reshape function
 // 
 void reshape(int w, int h) {
@@ -301,33 +254,38 @@ void mouseCallback(int button, int state, int x, int y) {
 	//cout << "Mouse Callback :: button=" << button << ", state=" << state << ", (" << x << "," << y << ")" << endl;
 	switch (button) {
 	case 0:
+	{
 		if (state == 0) {
-			
+
 			if (g_geometry != nullptr) {
 				cout << "create splines\n";
 				spline->addPoint(vec3(x / 10, (g_winHeight - y) / 10, -4));
-			}else
+			}
+			else
 				;
 		}
 		break;
-	case 1: //left mouse button
+	}
+	case 1:
+	{//left mouse button
 		cout << "Pan";
 		if (state == 0) {
 			g_mouseDown = (state == 0);
-			g_mousePos = vec2(x / 10,y  / 10);
-		} 
+			g_mousePos = vec2(x / 10, y / 10);
 		}
+
 		//if clicking make point in world
 
 		break;
-
-	case 3: //scroll foward/up
+	}
+	case 3: { //scroll foward/up
 		g_zoomFactor /= 1.1;
 		break;
-
-	case 4: //scroll back/down
+	}
+	case 4: { //scroll back/down
 		g_zoomFactor *= 1.1;
 		break;
+	}
 	}
 }
 
@@ -343,7 +301,7 @@ void secondMouseCallback(int button, int state, int x, int y) {
 	case 0:
 		if (state == 0) {
 			cout << "create splines\n";
-			speed->addPoint(vec3(x/5, (g_winSecHeight - y)/5, -4));
+			speed->addPoint(vec3(x / 5, (g_winSecHeight - y) / 5, -4));
 		}
 		break;
 	case 1: //left mouse button
@@ -360,7 +318,7 @@ void secondMouseCallback(int button, int state, int x, int y) {
 	case 4: //scroll back/down
 		g_zoomFactor *= 1.1;
 		break;
-	}
+	};
 }
 
 
@@ -395,45 +353,19 @@ int main(int argc, char **argv) {
 	//	abort(); // Unrecoverable error
 	//}
 
-	//asf check
-	if (strstr(argv[1], ".asf") != nullptr) {
-		// Finally create our geometry
 
-		g_skeleton = new Skeleton(argv[1]);
-	}
-	else if (strstr(argv[1], ".obj") != nullptr) {
+
+	if (strstr(argv[1], ".obj") != nullptr) {
 		g_geometry = new Geometry(argv[1]);
 
 	}
-	if (argc == 3) { //asf check
-		g_skeleton->readAMC(argv[2]);
-	}
-	spline = new Splines();
-	speed = new Splines();
 
+	spline = new Splines();
 
 	// Initialise GL, GLU and GLUT
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	if (g_geometry != nullptr) {
-		glutInitWindowSize(g_winSecWidth, g_winSecHeight);
-		g_secondWindow = glutCreateWindow("Second COMP308 Project");
-		glutDisplayFunc(secondDraw);
-		glutReshapeFunc(secondReshape);
 
-		glutKeyboardFunc(keyboardCallback);
-		glutSpecialFunc(specialCallback);
-
-		glutMouseFunc(secondMouseCallback);
-		glutMotionFunc(mouseMotionCallback);
-		initLight();
-
-		glutCreateMenu(menu);
-
-		glutAddMenuEntry("Clear Splines", MENU_CLEAR);
-		glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-	}
 	// Initialise window size and create window
 	glutInitWindowSize(g_winWidth, g_winHeight);
 	g_mainWindow = glutCreateWindow("COMP308 Project");
@@ -459,9 +391,6 @@ int main(int argc, char **argv) {
 
 	glutMouseFunc(mouseCallback);
 	glutMotionFunc(mouseMotionCallback);
-	
-
-
 
 	glutCreateMenu(menu);
 
@@ -473,9 +402,6 @@ int main(int argc, char **argv) {
 	// Create a light on the camera
 	initLight();
 
-
-
-	
 	// Loop required by OpenGL
 	// This will not return until we tell OpenGL to finish
 	glutMainLoop();
