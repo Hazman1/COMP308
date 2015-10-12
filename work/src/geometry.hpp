@@ -35,9 +35,12 @@ struct triangle {
 class Geometry {
 private:
 	image *texture = nullptr;
+	int thereIsTexture = 0;
 	comp308::vec3 Scale;
 	comp308::vec4 Rotation;
 	comp308::vec3 Translation;
+	std::vector<comp308::vec3> TranslationList;
+
 
 	GLuint g_shader = 0;
 	float mat_ambient[3];
@@ -74,9 +77,11 @@ public:
 	void toggleWireFrame();
 	void loadTexture(std::string s);
 	void rotate(comp308::vec4 r);
+	void translateList(std::vector < comp308::vec3> t);
 	void translate(comp308::vec3 t);
 	void setAmbient(comp308::vec3 a);
 	void setDiffuse(comp308::vec3 d);
 	void setSpecular(comp308::vec3 s);
 	void setShine(float s);
+	void clearTransList();
 };

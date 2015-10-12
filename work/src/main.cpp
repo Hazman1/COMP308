@@ -95,11 +95,7 @@ void menu(int item)
 	{
 		if (g_geometry != nullptr) {
 			if (spline->ready()) {
-				//	vector<vec3> temp = spline->getNavPoints();
-
-
-
-				g_geometry->Translate(spline->getNavPoints());
+				g_geometry->translateList(spline->getNavPoints());
 			}
 		}
 		break;
@@ -111,7 +107,7 @@ void menu(int item)
 		if (glutGetWindow() == g_mainWindow) {
 			spline->clearSpline();
 			if (g_geometry != nullptr) {
-				g_geometry->clearTrans();
+				g_geometry->clearTransList();
 			}
 		}
 		else {
@@ -123,7 +119,7 @@ void menu(int item)
 	case MENU_RESTART:
 	{
 		if (g_geometry != nullptr) {
-			g_geometry->clearTrans();
+			g_geometry->clearTransList();
 		}
 
 	}break;
@@ -186,7 +182,7 @@ void draw() {
 
 
 
-	g_geometry->renderGeometry();
+	g_geometry->renderGeometry(false);
 
 
 	spline->renderSpline();
@@ -407,7 +403,7 @@ int main(int argc, char **argv) {
 	glutMainLoop();
 
 	// Don't forget to delete all pointers that we made
-	delete g_skeleton;
+	
 	delete g_geometry;
 	return 0;
 }
