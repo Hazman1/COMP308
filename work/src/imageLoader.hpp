@@ -17,7 +17,6 @@
 #include "comp308.hpp"
 
 #include <vector>
-
 #include <stb_image.h>
 
 
