@@ -10,6 +10,8 @@ SET(headers
 	"geometry.hpp"
 	"splines.hpp"
 	"quat.hpp"
+	"shaderLoader.hpp"
+	"imageLoader.hpp"
 )
 
 
