@@ -21,6 +21,8 @@
 #include <vector>
 #include <map>
 
+#include "shaderLoader.hpp"
+#include "imageLoader.hpp"
 #include "comp308.hpp"
 #include "geometry.hpp"
 
@@ -28,8 +30,23 @@ using namespace std;
 using namespace comp308;
 
 
+
+
 Geometry::Geometry(string filename)
 {
+	Scale = vec3(1.0, 1.0, 1.0);
+	mat_ambient[0]=1;
+	mat_ambient[1]=1;
+	mat_ambient[2]=1;
+
+	mat_diffuse[0]=1;
+	mat_diffuse[1]=1;
+	mat_diffuse[2]=1;
+
+	mat_specular[0]=1;
+	mat_specular[1]=1;
+	mat_specular[2]=1;
+
     m_filename = filename;
     readOBJ(filename);
     if (m_triangles.size() > 0)
@@ -186,6 +203,9 @@ void Geometry::readOBJ(string filename)
     cout << m_normals.size()-1 << " normals" << endl;
     cout << m_triangles.size() << " faces" << endl;
 
+	/*for (int i = 1; i < m_uvs.size(); i++) {
+		cout << m_uvs[i]<<"\n";
+	}*/
 
     // If we didn't have any normals, create them
     if (m_normals.size() <= 1)
@@ -301,6 +321,28 @@ void Geometry::createNormals()
 
 }
 
+void Geometry::setTexture()
+{
+	glActiveTexture(GL_TEXTURE0); // Use slot 0, need to use GL_TEXTURE1 ... etc if using more than one texture PER OBJECT
+	glGenTextures(1, &g_texture); // Generate texture ID
+
+	glBindTexture(GL_TEXTURE_2D, g_texture); // Bind it as a 2D texture
+
+
+										 // Setup sampling strategies
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->dataPointer());
+	// Finnaly, actually fill the data into our texture
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, texture->w, texture->h, texture->glFormat(), GL_UNSIGNED_BYTE, texture->dataPointer());
+
+}
+
 
 //-------------------------------------------------------------
 // [Assignment 1] :
@@ -311,14 +353,40 @@ void Geometry::createDisplayListPoly()
 {
     // Delete old list if there is one
     if (m_displayListPoly) glDeleteLists(m_displayListPoly, 1);
+	glPushMatrix();
+	glMatrixMode(GL_TEXTURE);
+	glScalef(Scale.x,Scale.y,Scale.z);
+
 
     // Create a new list
     cout << "Creating Poly Geometry" << endl;
     m_displayListPoly = glGenLists(1);
-	
     glNewList(m_displayListPoly, GL_COMPILE);
     unsigned int i ;
-   
+    for(i =0; i<m_triangles.size(); i++)
+    {
+        glBegin(GL_TRIANGLES);
+
+        triangle points = m_triangles.at(i);
+
+        for (int k = 0 ; k<3 ; k++)
+        {
+           // cout << points.v[k].n << "|";
+
+            vec3 norm = m_normals.at(points.v[k].n);
+            vec2 uvs =  m_uvs.at(points.v[k].t);
+            vec3 vect = m_points.at(points.v[k].p);
+
+            glNormal3f(norm.x,norm.y,norm.z);
+            glTexCoord2f(uvs.x,uvs.y);
+            glVertex3f(vect.x,vect.y,vect.z);
+
+        }
+
+        glEnd();
+    }
+
+	glPopMatrix();
     // YOUR CODE GOES HERE
     // ...
 
@@ -369,8 +437,18 @@ void Geometry::createDisplayListWire()
     cout << "Finished creating Wire Geometry" << endl;
 }
 
+void Geometry::changeScale(comp308::vec3 s)
+{
+	Scale = s;
+	createDisplayListPoly();
+}
 
-void Geometry::renderGeometry()
+void Geometry::initShader() {
+	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
+}
+
+
+void Geometry::renderGeometry(bool shade)
 {
     if (m_wireFrameOn)
     {
@@ -380,50 +458,63 @@ void Geometry::renderGeometry()
         // When moving on to displaying your obj, comment out the
         // glutWireTeapot function & uncomment the glCallList function
         //-------------------------------------------------------------
-	
-		
+
+
+        glShadeModel(GL_SMOOTH);
+        //glutWireTeapot(5.0);
+        glCallList(m_displayListWire);
+
+
     }
     else
     {
-
+		
         //-------------------------------------------------------------
         // [Assignment 1] :
         // When moving on to displaying your obj, comment out the
         // glutWireTeapot function & uncomment the glCallList function
         //-------------------------------------------------------------
-		glPushMatrix();
-		if (!trans.empty()) {
-			glTranslatef(trans.at(frame).x, trans.at(frame).y, trans.at(frame).z);
+	glPushMatrix();
+	// Enable Drawing texures
+	glEnable(GL_TEXTURE_2D);
+	// Use Texture as the color
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	// Set the location for binding the texture
+	glActiveTexture(GL_TEXTURE0);
+	// Bind the texture
+
+        glBindTexture(GL_TEXTURE_2D, g_texture);
+		if (shade) {
+			//// Use the shader we made
+			glUseProgram(g_shader);
+
+			//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
+			glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
+
 		}
+
+        glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+		glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
+
+
+
+		glMatrixMode(GL_MODELVIEW);
+
+		glRotatef(Rotation.w, Rotation.x, Rotation.y, Rotation.z);
+
+		glTranslatef(Translation.x, Translation.y, Translation.z);
 		glShadeModel(GL_SMOOTH);
-		int i = 0;
-		for (i = 1; i<m_triangles.size() - 1; i++)
-		{
-			glBegin(GL_TRIANGLES);
 
-			triangle points = m_triangles.at(i);
 
-			for (int k = 0; k<3; k++)
-			{
-				// cout << points.v[k].n << "|";
+		//glutSolidTeapot(5.0);
+		glCallList(m_displayListPoly);
 
-				vec3 norm = m_normals.at(points.v[k].n);
-				vec2 uvs = m_uvs.at(points.v[k].t);
-				vec3 vect = m_points.at(points.v[k].p);
 
-				glNormal3f(norm.x, norm.y, norm.z);
-				glTexCoord2f(uvs.x, uvs.y);
-				glVertex3f(vect.x, vect.y, vect.z);
+        glDisable(GL_TEXTURE_2D);
 
-			}
-
-			glEnd();
-		}
 		glPopMatrix();
-		if (!trans.empty()) {
-			frame = (frame + 1) % (trans.size() - 1);
-		}
-		
     }
 }
 
@@ -433,14 +524,43 @@ void Geometry::toggleWireFrame()
     m_wireFrameOn = !m_wireFrameOn;
 }
 
-void Geometry::Translate(std::vector<comp308::vec3> t)
+void Geometry::loadTexture(std::string s)
 {
-	trans = t;
-
+	texture = new image(s);
+	setTexture();
+	initShader();
 }
 
-void Geometry::clearTrans()
+void Geometry::rotate(comp308::vec4 r)
 {
-	trans.clear();
-	frame = 0;
+	Rotation = r;
+	createDisplayListPoly();
 }
+
+void Geometry::translate(comp308::vec3 t)
+{
+	Translation = t;
+}
+
+void Geometry::setAmbient(comp308::vec3 a){
+  mat_ambient[0]=a.x;
+  mat_ambient[1]=a.y;
+  mat_ambient[2]=a.z;
+}
+
+void Geometry::setDiffuse(comp308::vec3 d){
+  mat_diffuse[0] = d.x;
+  mat_diffuse[1] = d.y;
+  mat_diffuse[2] = d.z;
+}
+
+void Geometry::setSpecular(comp308::vec3 s){
+  mat_specular[0] = s.x;
+  mat_specular[1] = s.y;
+  mat_specular[2] = s.z;
+}
+
+void Geometry::setShine(float s){
+ shine =s ;
+}
+
