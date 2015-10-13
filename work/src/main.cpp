@@ -39,7 +39,7 @@ GLuint g_mainWindow = 0;
 // Projection values
 // 
 float g_fovy = 20.0;
-float g_znear = 0.1;
+float g_znear = -5;
 float g_zfar = 1000.0;
 
 
@@ -56,7 +56,7 @@ int maxX, maxY;
 //
 
 Geometry *g_geometry = nullptr;
-
+Geometry *g_reference = nullptr;
 
 //Used for Splins and stuff
 //
@@ -71,13 +71,14 @@ void initLight() {
 	float diffintensity[] = { 0.7f, 0.7f, 0.7f, 1.0f };
 	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
-	glLightfv(GL_LIGHT0, GL_POSITION, direction);
+	//glLightfv(GL_LIGHT0, GL_POSITION, direction);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffintensity);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 
 
 	glEnable(GL_LIGHT0);
 }
+
 enum MENU_TYPE
 {
 	MENU_PLAY,
@@ -136,15 +137,14 @@ void setUpCamera() {
 	// Set up the projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(g_fovy, float(g_winWidth) / float(g_winHeight),
-		g_znear, g_zfar);
 
-
-
-	if (g_geometry != nullptr) {
+	/*if (g_geometry != nullptr) {
 		g_znear = -5;
 		glOrtho(-2, g_winWidth / 10, -2, g_winHeight / 10, g_znear, g_zfar);
-	}
+	} else {*/
+		gluPerspective(g_fovy, float(g_winWidth) / float(g_winHeight),
+			g_znear, g_zfar);
+	//}
 
 	// Set up the view part of the model view matrix
 	glMatrixMode(GL_MODELVIEW);
@@ -180,8 +180,9 @@ void draw() {
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glColor3f(1.0f, 0.0f, 0.0f);
 
-
-
+	
+	g_reference->renderGeometry(false);
+	
 	g_geometry->renderGeometry(false);
 
 
@@ -253,12 +254,12 @@ void mouseCallback(int button, int state, int x, int y) {
 	{
 		if (state == 0) {
 
-			if (g_geometry != nullptr) {
-				cout << "create splines\n";
-				spline->addPoint(vec3(x / 10, (g_winHeight - y) / 10, -4));
-			}
-			else
-				;
+		//	if (g_geometry != nullptr) {
+		//		cout << "create splines\n";
+		//		spline->addPoint(vec3(x / 10, (g_winHeight - y) / 10, -4));
+		//	}
+		//	else
+		//		;
 		}
 		break;
 	}
@@ -349,11 +350,13 @@ int main(int argc, char **argv) {
 	//	abort(); // Unrecoverable error
 	//}
 
-
-
+	if (argc >1&& strstr(argv[2], ".obj") != nullptr) {
+		g_reference = new Geometry(argv[2]);
+	}
+	
+	
 	if (strstr(argv[1], ".obj") != nullptr) {
 		g_geometry = new Geometry(argv[1]);
-
 	}
 
 	spline = new Splines();
