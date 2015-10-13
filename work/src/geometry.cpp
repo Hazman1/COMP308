@@ -445,7 +445,7 @@ void Geometry::changeScale(comp308::vec3 s)
 
 void Geometry::initShader() {
 #ifdef _WIN32
-	cout << "This is Windows. Shader" << endl;
+	cout << "This is Windows. Through visual studios. Shader" << endl;
 	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
 #else
 	cout << "This is Not Windows. Shader" << endl;

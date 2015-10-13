@@ -576,7 +576,7 @@ int main(int argc, char **argv) {
 	initLight();
 	//initShader();
 #ifdef _WIN32
-	cout << "This is Windows." << endl;
+	cout << "This is Windows. Through visual studios" << endl;
 	string _bunny = "./res/assets/bunny.obj";
 	string _Boat = "./res/assets/Boat.obj";
 #else
