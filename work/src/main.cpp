@@ -201,11 +201,9 @@ void draw() {
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glColor3f(1.0f, 0.0f, 0.0f);
 
+	g_geometry->renderGeometry(false);
 	
 	g_reference->renderGeometry(false);
-	
-	//g_geometry->renderGeometry(false);
-
 
 	spline->renderSpline();
 	// Disable flags for cleanup (optional)
@@ -372,14 +370,15 @@ int main(int argc, char **argv) {
 	//	abort(); // Unrecoverable error
 	//}
 
-	if (argc >1&& strstr(argv[2], ".obj") != nullptr) {
+	if (strstr(argv[1], ".obj") != nullptr) {
+		g_geometry = new Geometry(argv[1]);
+	}
+
+	if (argc > 2 && strstr(argv[2], ".obj") != nullptr) {
 		g_reference = new Geometry(argv[2]);
 	}
 	
 	
-	if (strstr(argv[1], ".obj") != nullptr) {
-		g_geometry = new Geometry(argv[1]);
-	}
 
 	spline = new Splines();
 
