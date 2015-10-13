@@ -202,7 +202,7 @@ void draw() {
 	if(g_reference!=nullptr){
 		g_reference->renderGeometry(false);	
 	}
-	
+
 	if(g_geometry!=nullptr){
 		g_geometry->renderGeometry(false);
 	}
