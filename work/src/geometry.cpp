@@ -450,7 +450,6 @@ void Geometry::initShader() {
 
 void Geometry::renderGeometry(bool shade)
 {
-
 	//-------------------------------------------------------------
 	// [Assignment 1] :
 	// When moving on to displaying your obj, comment out the
@@ -492,8 +491,8 @@ void Geometry::renderGeometry(bool shade)
 	glShadeModel(GL_SMOOTH);
 
 
-	//glutSolidTeapot(5.0);
-	glCallList(m_displayListPoly);
+	glutSolidTeapot(5.0);
+	//glCallList(m_displayListPoly);
 
 
 	glDisable(GL_TEXTURE_2D);

@@ -276,18 +276,18 @@ void mouseCallback(int button, int state, int x, int y) {
 	{
 		if (state == 0) {
 
-		//	if (g_geometry != nullptr) {
-		//		cout << "create splines\n";
-		//		spline->addPoint(vec3(x / 10, (g_winHeight - y) / 10, -4));
-		//	}
-		//	else
-		//		;
+			if (g_geometry != nullptr) {
+				cout << "create splines\n";
+				spline->addPoint(vec3(x / 10, (g_winHeight - y) / 10, -4));
+			}
+			else
+				;
 		}
 		break;
 	}
 	case 1:
 	{//left mouse button
-		cout << "Pan";
+		cout << "Pan\n";
 		if (state == 0) {
 			g_mouseDown = (state == 0);
 			g_mousePos = vec2(x / 10, y / 10);
@@ -433,5 +433,6 @@ int main(int argc, char **argv) {
 	// Don't forget to delete all pointers that we made
 	
 	delete g_geometry;
+	delete g_reference;
 	return 0;
 }
