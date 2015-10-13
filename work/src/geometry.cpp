@@ -104,7 +104,7 @@ void Geometry::readOBJ(string filename)
 			{
 				vec3 v;
 				objLine >> v.x >> v.y >> v.z;
-				m_points.push_back(v);
+				m_points.push_back((v*10));
 
 			}
 			else if (mode == "vn")
@@ -444,7 +444,14 @@ void Geometry::changeScale(comp308::vec3 s)
 }
 
 void Geometry::initShader() {
+#ifdef _WIN32
+	cout << "This is Windows. Shader" << endl;
 	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
+#else
+	cout << "This is Not Windows. Shader" << endl;
+	g_shader = makeShaderProgram("work/res/shaders/shaderDemo.vert", "work/res/shaders/shaderDemo.frag");
+#endif
+	
 }
 
 
@@ -491,8 +498,8 @@ void Geometry::renderGeometry(bool shade)
 	glShadeModel(GL_SMOOTH);
 
 
-	glutSolidTeapot(5.0);
-	//glCallList(m_displayListPoly);
+	//glutSolidTeapot(5.0);
+	glCallList(m_displayListPoly);
 
 
 	glDisable(GL_TEXTURE_2D);
