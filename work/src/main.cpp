@@ -77,7 +77,6 @@ void initLight() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffintensity);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 
-
 	glEnable(GL_LIGHT0);
 }
 
@@ -102,7 +101,6 @@ void menu(int item)
 			}
 		}
 		break;
-
 	}
 	break;
 	case MENU_CLEAR:
@@ -201,18 +199,13 @@ void draw() {
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glColor3f(1.0f, 0.0f, 0.0f);
 
-<<<<<<< HEAD
-	g_geometry->renderGeometry(false);
-	
-	g_reference->renderGeometry(false);
-=======
+
 	if(g_reference!=nullptr)
 	g_reference->renderGeometry(false);
 	
 	if(g_geometry!=nullptr)
 	g_geometry->renderGeometry(false);
 
->>>>>>> 6d752417c439a26c89d1e57c13180e41cfe9ab7e
 
 	spline->renderSpline();
 	// Disable flags for cleanup (optional)
