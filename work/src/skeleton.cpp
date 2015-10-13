@@ -627,6 +627,7 @@ string splitter(string line) {
 			return line.substr(k, line.find_last_not_of(" \t\r\n") - k + 1);
 		}
 	}
+	return "";
 }
 Frame parseFrame(std::vector<string>& act) {
 

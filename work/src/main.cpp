@@ -16,6 +16,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <string.h>
+#include <cstring>
 
 #include "comp308.hpp"
 #include "skeleton.hpp"
