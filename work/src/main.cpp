@@ -199,10 +199,11 @@ void draw() {
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glColor3f(1.0f, 0.0f, 0.0f);
 
-	
+	if(g_reference!=nullptr)
 	g_reference->renderGeometry(false);
 	
-	//g_geometry->renderGeometry(false);
+	if(g_geometry!=nullptr)
+	g_geometry->renderGeometry(false);
 
 
 	spline->renderSpline();
