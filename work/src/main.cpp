@@ -63,14 +63,14 @@ Geometry *g_reference = nullptr;
 //Used for Splins and stuff
 //
 Splines *spline;
-Splines *speed;
+Splines *Speed;
 
 // Sets up where and what the light is
 // Called once on start up
 // 
 void initLight() {
 	float direction[] = { 0.0f, 0.0f, 1.0f, 0.0f };
-	float diffintensity[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	float diffintensity[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 	//glLightfv(GL_LIGHT0, GL_POSITION, direction);
@@ -114,7 +114,7 @@ void menu(int item)
 			}
 		}
 		else {
-			speed->clearSpline();
+			Speed->clearSpline();
 		}
 
 		break;
@@ -173,6 +173,25 @@ void draw() {
 
 	// Enable flags for normal rendering
 	glEnable(GL_DEPTH_TEST);
+
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 0.0f); // Red
+	glVertex3f(0.0f, 0.0f,0.0f);  
+	glVertex3f(15.0f, 0.0f,0.0);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 1.0f, 0.0f); // Blue
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 15.0f, 0.0f);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 0.0f, 1.0f); // Green
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 15.0f);
+	glEnd();
+
 	glEnable(GL_LIGHTING);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
@@ -185,7 +204,7 @@ void draw() {
 	
 	g_reference->renderGeometry(false);
 	
-	g_geometry->renderGeometry(false);
+	//g_geometry->renderGeometry(false);
 
 
 	spline->renderSpline();
@@ -199,6 +218,7 @@ void draw() {
 
 	// Queue the next frame to be drawn straight away
 	glutPostRedisplay();
+
 }
 
 
@@ -300,7 +320,7 @@ void secondMouseCallback(int button, int state, int x, int y) {
 	case 0:
 		if (state == 0) {
 			cout << "create splines\n";
-			speed->addPoint(vec3(x / 5, (g_winSecHeight - y) / 5, -4));
+			Speed->addPoint(vec3(x / 5, (g_winSecHeight - y) / 5, -4));
 		}
 		break;
 	case 1: //left mouse button
