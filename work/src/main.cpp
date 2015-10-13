@@ -77,7 +77,6 @@ void initLight() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffintensity);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 
-
 	glEnable(GL_LIGHT0);
 }
 
@@ -102,7 +101,6 @@ void menu(int item)
 			}
 		}
 		break;
-
 	}
 	break;
 	case MENU_CLEAR:
@@ -201,9 +199,15 @@ void draw() {
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glColor3f(1.0f, 0.0f, 0.0f);
 
+<<<<<<< HEAD
 	if(g_reference!=nullptr){
 		g_reference->renderGeometry(false);	
 	}
+=======
+
+	if(g_reference!=nullptr)
+	g_reference->renderGeometry(false);
+>>>>>>> 57c35619e6caf3000322f06ae5eb324c076bddf5
 	
 	if(g_geometry!=nullptr){
 		g_geometry->renderGeometry(false);
