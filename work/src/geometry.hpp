@@ -86,4 +86,4 @@ public:
 	void setShine(float s);
 	void clearTransList();
 	void laplaceSmooth();
-}
+};
