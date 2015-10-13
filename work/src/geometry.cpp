@@ -565,3 +565,30 @@ void Geometry::clearTransList()
 	TranslationList.clear();
 }
 
+
+
+/*	
+	http://graphics.stanford.edu/courses/cs468-12-spring/LectureSlides/06_smoothing.pdf
+
+	http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
+	
+	https://en.wikipedia.org/wiki/Additive_smoothing
+
+		https://en.wikipedia.org/wiki/Laplacian_smoothing
+		From Wikipedia, the free encyclopedia
+		This article is about the mesh smoothing algorithm.For the multinomial shrinkage estimator, also called Laplace smoothing or add - one smoothing, see additive smoothing.
+		Laplacian smoothing is an algorithm to smooth a polygonal mesh.[1][2] For each vertex in a mesh, a new position is chosen based on local 
+		information(such as the position of neighbors) and the vertex is moved there.In the case that a mesh is topologically a rectangular
+		grid(that is, each internal vertex is connected to four neighbors) then this operation produces the Laplacian of the mesh.
+
+		More formally, the smoothing operation may be described per - vertex as :
+
+		\bar{ x }_{ i } = \frac{ 1 }{N} \sum_{ j = 1 }^{N}\bar{ x }_j
+		Where N is the number of adjacent vertices to node i, \bar{ x }_{ j } is the position of the j - th adjacent vertex and \bar{ x }_{ i } is the new position for node i.[3]
+		*/
+void Geometry::laplaceSmooth()
+{
+
+
+}
+

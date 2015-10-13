@@ -69,6 +69,7 @@ private:
 	void createDisplayListPoly();
 	void createDisplayListWire();
 
+
 public:
 	Geometry(std::string);
 	// ~GeometryManager();
@@ -84,4 +85,5 @@ public:
 	void setSpecular(comp308::vec3 s);
 	void setShine(float s);
 	void clearTransList();
-};
+	void laplaceSmooth();
+}
