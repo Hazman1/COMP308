@@ -201,18 +201,14 @@ void draw() {
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glColor3f(1.0f, 0.0f, 0.0f);
 
-<<<<<<< HEAD
-	g_geometry->renderGeometry(false);
+	if(g_reference!=nullptr){
+		g_reference->renderGeometry(false);	
+	}
 	
-	g_reference->renderGeometry(false);
-=======
-	if(g_reference!=nullptr)
-	g_reference->renderGeometry(false);
-	
-	if(g_geometry!=nullptr)
-	g_geometry->renderGeometry(false);
+	if(g_geometry!=nullptr){
+		g_geometry->renderGeometry(false);
+	}
 
->>>>>>> 6d752417c439a26c89d1e57c13180e41cfe9ab7e
 
 	spline->renderSpline();
 	// Disable flags for cleanup (optional)
@@ -354,7 +350,9 @@ void secondMouseCallback(int button, int state, int x, int y) {
 // 
 void mouseMotionCallback(int x, int y) {
 	//cout << "Mouse Motion Callback :: (" << x << "," << y << ")" << endl;
-	if (g_geometry != nullptr) return;
+	if (g_geometry != nullptr) {
+		return;
+	}
 	if (g_mouseDown) {
 		vec2 dif = vec2(x, y) - g_mousePos;
 		g_mousePos = vec2(x, y);
