@@ -34,7 +34,7 @@ struct triangle {
 
 class Geometry {
 private:
-	image *texture = nullptr;
+	Texture *texture = nullptr;
 	int thereIsTexture = 0;
 	comp308::vec3 Scale;
 	comp308::vec4 Rotation;
