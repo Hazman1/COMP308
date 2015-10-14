@@ -61,6 +61,7 @@ void Geometry::readOBJ(string filename)
 {
 
 	// Make sure our geometry information is cleared
+	*texture = new Texture();
 	m_points.clear();
 	m_uvs.clear();
 	m_normals.clear();
