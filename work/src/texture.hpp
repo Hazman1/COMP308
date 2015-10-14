@@ -9,14 +9,19 @@
 
 class Texture{
 private:
-	image *image;
+	image* Image;
+	float gradient[256][256];
 	void generateHeightmap();
 	void generateTexture();
-	double lerp(float, float, float);
+	void generateGradiant();
+	float lerp(float, float, float);
 	void setup(int, float, float, float, float);
+	float randomValue(int);
+	float dotGradient(int, int, float, float);
+	float noiseMap(float, float);
 
 
 public:
-	Texture();
-	image getImage();
+	Texture(std::string&);
+	image* getImage();
 };
