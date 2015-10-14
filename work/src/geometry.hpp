@@ -71,6 +71,7 @@ private:
 	void createDisplayListPoly();
 	void createDisplayListWire();
 	void WriteoutNab(std::string temp);
+	void readNAB(std::string);
 
 public:
 	Geometry(std::string);

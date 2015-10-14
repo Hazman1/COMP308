@@ -49,24 +49,30 @@ Geometry::Geometry(string filename)
 
 	m_filename = filename;
 	readOBJ(filename);
+	int length = filename.length() - 3;
+	string temp = filename.substr(0, length);
+	temp = temp + "nab";
+	readNAB(temp);
+
+
 	if (m_triangles.size() > 0)
 	{
 		createDisplayListPoly();
 		createDisplayListWire();
+			}
+
+	if (!nabours.size() > 0) {
 		generateNabours();
+		WriteoutNab(temp);
 	}
-	int length = filename.length() - 3;
-	string temp = filename.substr(0, length);
-	temp = temp + "nab";
-	cout << temp<<endl;
-	WriteoutNab(temp);
+	
 
 }
 
 void Geometry::generateNabours(){
 	long count = 0;
 	//std::map<unsigned int, std::vector<int>> nabours;
-	for (int i = 0; i < m_points.size(); i++) {
+	for (unsigned int i = 0; i < m_points.size(); i++) {
 		std::vector<int> n;
 		for (triangle t : m_triangles) {
 			for(vertex k: t.v){
@@ -226,7 +232,7 @@ void Geometry::readOBJ(string filename)
 	{
 		createNormals();
 	}
-
+	
 	cout << "Reading OBJ file is DONE." << endl;
 	cout << m_points.size() - 1 << " points" << endl;
 	cout << m_uvs.size() - 1 << " uv coords" << endl;
@@ -471,14 +477,59 @@ void Geometry::WriteoutNab(std::string temp)
 	ofstream file;
 	file.open(temp);
 	for (int i = 0; i < nabours.size(); i++) {
-		file << i << ":";
+		file << i << " ";
 		string t;
 		for (int k : nabours[i]) {
-			t=t +  std::to_string(k) + ",";
+			t=t +  std::to_string(k) + " ";
 		}
 		file<< t.substr(0, t.length() - 1)<< endl;
 	}
 	file << endl;
+}
+
+void Geometry::readNAB(std::string filename)
+{
+	ifstream objFile(filename);
+
+	if (!objFile.is_open())
+	{
+		cerr << "Error reading " << filename << endl;
+		throw runtime_error("Error :: could not open file.");
+	}
+
+	cout << "Reading file " << filename << endl;
+
+	// good() means that failbit, badbit and eofbit are all not set
+	while (objFile.good())
+	{
+
+		// Pull out line from file
+		string line;
+		std::getline(objFile, line);
+		istringstream objLine(line);
+
+		// Pull out mode from line
+		string mode;
+		objLine >> mode;
+		int index = 0;
+		std::vector<int> nabs;
+
+		// Reading like this means whitespace at the start of the line is fine
+		// attempting to read from an empty string/line will set the failbit
+		if (!objLine.fail())
+		{
+			
+			objLine >> index;
+			while (objLine.good()) {
+				int nab = 0;
+				objLine >> nab;
+				nabs.push_back(nab);
+			}
+
+		}
+		nabours[index] = nabs;
+	}
+
 }
 
 void Geometry::changeScale(comp308::vec3 s)
@@ -634,7 +685,7 @@ void Geometry::laplaceSmooth()
 {
 	std::vector<vec3> points;
 
-	for (int i = 0; i < nabours.size(); i++) {
+	for (unsigned int i = 0; i < nabours.size(); i++) {
 		vec3 a(0, 0, 0);
 		vector<int> nab = nabours[i];
 		for (int k : nab) {
