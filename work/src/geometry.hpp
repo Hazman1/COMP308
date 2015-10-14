@@ -34,7 +34,8 @@ struct triangle {
 
 class Geometry {
 private:
-	Texture *texture = nullptr;
+	//Texture *texture = nullptr;
+	image *texture = nullptr;
 	int thereIsTexture = 0;
 	comp308::vec3 Scale;
 	comp308::vec4 Rotation;
@@ -68,7 +69,7 @@ private:
 	void setTexture();
 	void createDisplayListPoly();
 	void createDisplayListWire();
-
+	void WriteoutNab(std::string temp);
 
 public:
 	Geometry(std::string);

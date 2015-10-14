@@ -55,8 +55,13 @@ Geometry::Geometry(string filename)
 		createDisplayListWire();
 		generateNabours();
 	}
-}
+	int length = filename.length() - 3;
+	string temp = filename.substr(0, length);
+	temp = temp + "nab";
+	cout << temp<<endl;
+	WriteoutNab(temp);
 
+}
 
 void Geometry::generateNabours(){
 	long count = 0;
@@ -85,7 +90,7 @@ void Geometry::readOBJ(string filename)
 {
 
 	// Make sure our geometry information is cleared
-	*texture = new Texture();
+	//*texture = new Texture();
 	m_points.clear();
 	m_uvs.clear();
 	m_normals.clear();
@@ -461,6 +466,21 @@ void Geometry::createDisplayListWire()
 	cout << "Finished creating Wire Geometry" << endl;
 }
 
+void Geometry::WriteoutNab(std::string temp)
+{
+	ofstream file;
+	file.open(temp);
+	for (int i = 0; i < nabours.size(); i++) {
+		file << i << ":";
+		string t;
+		for (int k : nabours[i]) {
+			t=t +  std::to_string(k) + ",";
+		}
+		file<< t.substr(0, t.length() - 1)<< endl;
+	}
+	file << endl;
+}
+
 void Geometry::changeScale(comp308::vec3 s)
 {
 	Scale = s;
@@ -617,11 +637,12 @@ void Geometry::laplaceSmooth()
 	for (int i = 0; i < nabours.size(); i++) {
 		vec3 a(0, 0, 0);
 		vector<int> nab = nabours[i];
-		for (int i : nab) {
-			a = a + m_points.at(i);
+		for (int k : nab) {
+			a = a + m_points.at(k);
 		}
+		
 		if (nab.size() != 0) {
-		a = a / nab.size();
+		a = a /nab.size();
 		points.push_back(a);
 		}
 	}
