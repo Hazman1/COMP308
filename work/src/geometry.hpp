@@ -20,7 +20,7 @@
 #include <vector>
 #include "imageLoader.hpp"
 #include "comp308.hpp"
-
+#include <map>
 
 struct vertex {
 	int p = 0; // index for point in m_points
@@ -40,7 +40,7 @@ private:
 	comp308::vec4 Rotation;
 	comp308::vec3 Translation;
 	std::vector<comp308::vec3> TranslationList;
-
+	std::map<unsigned int, std::vector<int>> nabours;
 
 	GLuint g_shader = 0;
 	float mat_ambient[3];
@@ -61,7 +61,7 @@ private:
 	// IDs for the display list to render
 	GLuint m_displayListPoly = 0; // DisplayList for Polygon
 	GLuint m_displayListWire = 0; // DisplayList for Wireframe
-
+	void generateNabours();
 	void readOBJ(std::string);
 	void initShader();
 	void createNormals();

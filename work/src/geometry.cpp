@@ -53,9 +53,33 @@ Geometry::Geometry(string filename)
 	{
 		createDisplayListPoly();
 		createDisplayListWire();
+		generateNabours();
 	}
 }
 
+
+void Geometry::generateNabours(){
+	long count = 0;
+	//std::map<unsigned int, std::vector<int>> nabours;
+	for (int i = 0; i < m_points.size(); i++) {
+		std::vector<int> n;
+		for (triangle t : m_triangles) {
+			for(vertex k: t.v){
+				if (k.p == i) {
+					for (vertex k : t.v) {
+						if (k.p != i) {
+							n.push_back(k.p);
+						}
+						
+					}
+				}
+				count++;
+			}
+			nabours[i] = n;
+		}
+	}
+	cout << count << endl;
+}
 
 void Geometry::readOBJ(string filename)
 {
@@ -238,6 +262,7 @@ void Geometry::createNormals()
 	unsigned int i;
 	std::vector<vec3> normals;
 	std::map<unsigned int, pNormals> Pnorm;
+
 	for (i = 0; i < m_triangles.size() - 1; i++)
 	{
 		triangle face = m_triangles.at(i);
@@ -245,9 +270,7 @@ void Geometry::createNormals()
 		vec3 A = m_points.at(face.v[0].p);
 		vec3 B = m_points.at(face.v[1].p);
 		vec3 C = m_points.at(face.v[2].p);
-
-
-
+		
 		vec3 U = B - C;
 		vec3 V = B - A;
 
@@ -588,7 +611,20 @@ void Geometry::clearTransList()
 		*/
 void Geometry::laplaceSmooth()
 {
+	std::vector<vec3> points;
 
-
+	for (int i = 0; i < nabours.size(); i++) {
+		vec3 a(0, 0, 0);
+		vector<int> nab = nabours[i];
+		for (int i : nab) {
+			a = a + m_points.at(i);
+		}
+		if (nab.size() != 0) {
+		a = a / nab.size();
+		points.push_back(a);
+		}
+	}
+ 	m_points = points;
+	createDisplayListPoly();
 }
 

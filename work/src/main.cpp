@@ -457,7 +457,9 @@ void keyboardCallback(unsigned char key, int x, int y) {
 		spotDir[0] = spotDir[0] + 0.1f;
 	}
 
-
+	if (key == ' ') {
+		boat->laplaceSmooth();
+	}
 	if (key == 27)exit(0);
 
 	//101, 103
