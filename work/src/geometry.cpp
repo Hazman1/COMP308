@@ -494,7 +494,8 @@ void Geometry::readNAB(std::string filename)
 	if (!objFile.is_open())
 	{
 		cerr << "Error reading " << filename << endl;
-		throw runtime_error("Error :: could not open file.");
+		return;
+		//throw runtime_error("Error :: could not open file.");
 	}
 
 	cout << "Reading file " << filename << endl;
