@@ -13,9 +13,9 @@ Texture::Texture(std::string &s){
 }
 
 void Texture::generateGradiant(){
-	for(uint i=0; i<sizeof(Texture::gradient); i++){
-		for(uint j=0; j<sizeof(Texture::gradient[0]); j++){
-			gradient[i][j] = randomValue(i*j);
+	for(unsigned int i=0; i<sizeof(Texture::gradient); i++){
+		for(unsigned int j=0; j<sizeof(Texture::gradient[0]); j++){
+			gradient[i][j] = randomValue(i*j+i+j);
 		}
 	}
 }
