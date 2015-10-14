@@ -85,7 +85,6 @@ void Geometry::readOBJ(string filename)
 {
 
 	// Make sure our geometry information is cleared
-	*texture = new Texture();
 	m_points.clear();
 	m_uvs.clear();
 	m_normals.clear();
@@ -363,7 +362,8 @@ void Geometry::setTexture()
 
 	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->dataPointer());
 	// Finnaly, actually fill the data into our texture
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, texture->w, texture->h, texture->glFormat(), GL_UNSIGNED_BYTE, texture->dataPointer());
+	image* im = texture->getImage();
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, im->w, im->h, im->glFormat(), GL_UNSIGNED_BYTE, im->dataPointer());
 
 }
 
@@ -540,7 +540,7 @@ void Geometry::toggleWireFrame()
 
 void Geometry::loadTexture(std::string s)
 {
-	texture = new image(s);
+	texture = new Texture(s);
 	setTexture();
 	initShader();
 	thereIsTexture = 1;

@@ -20,6 +20,7 @@
 #include <vector>
 #include "imageLoader.hpp"
 #include "comp308.hpp"
+#include "texture.hpp"
 #include <map>
 
 struct vertex {

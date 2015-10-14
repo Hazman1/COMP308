@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -9,24 +7,39 @@
 #include "texture.hpp"
 #include "imageLoader.hpp"
 
-Texture::Texture(){
-	image = new image("word/res/texture/wood.jpg");
+Texture::Texture(std::string &s){
+	Image = new image(s);
+	generateGradiant();
+}
 
+void Texture::generateGradiant(){
+	for(uint i=0; i<sizeof(Texture::gradient); i++){
+		for(uint j=0; j<sizeof(Texture::gradient[0]); j++){
+			gradient[i][j] = randomValue(i*j);
+		}
+	}
+}
 
+float Texture::randomValue(int val){
+	int x = (val<<13) ^ val;
+	x = 1.0-((x*(x*x*15731 + 789221) + 1376312589) & 2147483647);
+	float z = x / 1073741824.0;
+	return z;
 }
 
 float Texture::lerp(float t, float a, float b){
 	return (1.0 - t)*a + t*b;
 }
 
-float dotGradient(int xi, int yi, float xf, float yf){
-	float f = gradient[x][y];
+float Texture::dotGradient(int xi, int yi, float xf, float yf){
+	float f = Texture::gradient[xi][yi];
 
-	float dx = x - (double)xi;
-	float dy = y - (double)iy;
+	float dx = xf - (double)xi;
+	float dy = yf - (double)yi;
+	return dy;
 }
 
-float noiseMap(float x, float y){
+float Texture::noiseMap(float x, float y){
 	int x0 = (x > 0.0 ? (int)x : (int)x-1);
 	int x1 = x0+1;
 	int y0 = (y > 0.0 ? (int)y : (int)y-1);
@@ -46,6 +59,6 @@ float noiseMap(float x, float y){
 	return lerp(sy, ix1, ix0);
 }
 
-image getImage(){
-	return Texture::image;
+image* Texture::getImage(){
+	return Texture::Image;
 }

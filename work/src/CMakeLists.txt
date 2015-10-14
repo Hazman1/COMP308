@@ -12,6 +12,7 @@ SET(headers
 	"quat.hpp"
 	"shaderLoader.hpp"
 	"imageLoader.hpp"
+	"texture.hpp"
 )
 
 
@@ -21,6 +22,7 @@ SET(sources
 	"skeleton.cpp"
 	"splines.cpp"
 	"geometry.cpp"
+	"texture.cpp"
 )
 
 # Add executable target and link libraries
