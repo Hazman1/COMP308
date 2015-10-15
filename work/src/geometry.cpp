@@ -57,7 +57,8 @@ Geometry::Geometry(string filename)
 
 	readNAB(nab);
 	readEDG(edg);
-	
+	nabours.erase(3145);
+
 	if (m_triangles.size() > 0)
 	{
 		createDisplayListPoly();
@@ -410,11 +411,14 @@ void Geometry::createDisplayListPoly()
 		for (int k = 0; k < 3; k++)
 		{
 			// cout << points.v[k].n << "|";
-
+			
 			vec3 norm = m_normals.at(points.v[k].n);
 			vec2 uvs = m_uvs.at(points.v[k].t);
 			vec3 vect = m_points.at(points.v[k].p);
-
+			vec3 a(0, 0, 0);
+			if (vect.x==a.x && vect.y==a.y && vect.z==a.z) {
+				cout << points.v[k].p << endl;
+			}
 			glNormal3f(norm.x, norm.y, norm.z);
 			glTexCoord2f(uvs.x, uvs.y);
 			glVertex3f(vect.x, vect.y, vect.z);
@@ -450,7 +454,7 @@ void Geometry::createDisplayListWire()
 	m_displayListWire = glGenLists(1);
 	glNewList(m_displayListWire, GL_COMPILE);
 	unsigned int i;
-	for (i = 1; i < m_triangles.size() - 1; i++)
+	for (i = 0; i < m_triangles.size() - 1; i++)
 	{
 		glBegin(GL_LINE_LOOP);
 
@@ -568,7 +572,6 @@ void Geometry::readEDG(std::string filename)
 		// attempting to read from an empty string/line will set the failbit
 		if (!objLine.fail())
 		{
-
 			objLine >> index;
 			nabours.erase(index);
 
@@ -642,8 +645,33 @@ void Geometry::renderGeometry(bool shade)
 
 
 	//glutSolidTeapot(5.0);
-	glCallList(m_displayListPoly);
+	//glCallList(m_displayListPoly);
+	unsigned int i;
+	for (i = 0; i < m_triangles.size(); i++)
+	{
+		glBegin(GL_TRIANGLES);
 
+		triangle points = m_triangles.at(i);
+
+		for (int k = 0; k < 3; k++)
+		{
+			// cout << points.v[k].n << "|";
+
+			vec3 norm = m_normals.at(points.v[k].n);
+			vec2 uvs = m_uvs.at(points.v[k].t);
+			vec3 vect = m_points.at(points.v[k].p);
+			vec3 a(0, 0, 0);
+			
+			glNormal3f(norm.x, norm.y, norm.z);
+			glTexCoord2f(uvs.x, uvs.y);
+			glVertex3f(vect.x, vect.y, vect.z);
+
+		}
+
+		glEnd();
+	}
+
+	glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);
 
@@ -731,28 +759,31 @@ void Geometry::clearTransList()
 		*/
 void Geometry::laplaceSmooth()
 {
-	//for (int ten = 0; ten < 10; ten++) {
+	for (int ten = 0; ten < 10; ten++) {
 		std::map<int, vec3> points;
 
 
 		for (auto k : nabours) {
 			int index = k.first;
 			vec3 a(0, 0, 0);
+			int number = 0;
 			vector<int> nab = nabours[index];
+			number = nab.size();
 			for (int k : nab) {
 				a = a + m_points.at(k);
 				//a = a + sum(nabours[k]);
+				//number += nabours[k].size();
 			}
 
-			if (nab.size() != 0) {
-				a = a / nab.size();
+			if (number != 0) {
+				a = a / number;
 			}
 			points[index] = a;
 		}
 		for (auto k : points) {
 			m_points[k.first] = k.second;
 		}
-	//}
+	}
 	createDisplayListPoly();
 }
 
@@ -761,7 +792,6 @@ comp308::vec3 Geometry::sum(std::vector<int> t)
 	vec3 a(0, 0, 0);
 	for (int k : t) {
 		a = a + m_points.at(k);
-		a = a / t.size();
 	}
 	return a;
 }
