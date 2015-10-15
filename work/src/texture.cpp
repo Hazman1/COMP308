@@ -2,11 +2,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-<<<<<<< HEAD
-=======
 #include <stdio.h>
 #include <stdlib.h>
->>>>>>> harry
 
 #include "imageLoader.hpp"
 #include "comp308.hpp"
@@ -28,13 +25,14 @@ Texture::Texture(std::string s){
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
 			cout <<"yes\n";
-			dMap[x * 3 + 0] = (uint8_t) (heatMap[i][j] * 140);
-			dMap[x * 3 + 1] = (uint8_t) (heatMap[i+1][j+1] * 140);
-			dMap[x * 3 + 2] = (uint8_t) (heatMap[i+2][j+2] * 140);
+			heatMap[i][j] = smoothNoise(i,j);
+			dMap[x * 3 + 0] = (uint8_t) (heatMap[i][j] * 100);
+			dMap[x * 3 + 1] = (uint8_t) (heatMap[i+1][j+1] * 100);
+			dMap[x * 3 + 2] = (uint8_t) (heatMap[i+2][j+2] * 100);
 			x++;
 		}
 	}
-	printf("x %d\n", x);
+
 	FILE *fout = fopen("work/res/textures/output.png","wb");
 	struct TinyPngOut pngout;
 	if (fout == NULL || TinyPngOut_init(&pngout, fout, width, height) != TINYPNGOUT_OK)
@@ -52,6 +50,13 @@ Texture::Texture(std::string s){
 	}
 	fclose(fout);
 }
+
+float Texture::smoothNoise(int x, int y){
+	float corner = heatMap[x-1][y-1] + heatMap[x+1][y-1] +  heatMap[x-1][y+1] + heatMap[x+1][y+1] / 16.0;
+	float side = heatMap[x-1][y] + heatMap[x+1][y] + heatMap[x][y-1] + heatMap[x][y+1] / 8.0;
+	float centre = heatMap[x][y] / 4.0 ;
+	return corner + side+ centre;
+}	
 
 void Texture::makeHeatmap(){
 	for(unsigned int i=0; i<width*2; i++){
@@ -78,7 +83,18 @@ float Texture::randomValue(int val){
 }
 
 float Texture::lerp(float t, float a, float b){
-	return (1.0 - t)*a + t*b;
+	float f = t * pi();
+	f = (1 - cos(f)) *0.5;
+	return a*(1-f) + b*f;
+}
+
+float Texture::cubicLerp(float t, int v0, int v1, int v2, int v3){
+	int p = (v3 - v2) - (v0 -v1);
+	int q = (v0 - v1) - p;
+	int r = v2 - v0;
+	int s = v1;
+
+	return (p*pow(t,3) + q*pow(t, 2) + r*t + s);
 }
 
 float Texture::dotGradient(int xi, int yi, float xf, float yf){

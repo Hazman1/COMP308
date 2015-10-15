@@ -73,6 +73,7 @@ private:
 	void WriteoutNab(std::string temp);
 	void readNAB(std::string);
 	void readEDG(std::string);
+	void createUVS();
 	comp308::vec3 sum(std::vector<int> t);
 
 public:

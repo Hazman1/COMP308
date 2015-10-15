@@ -25,6 +25,8 @@ private:
 	float noiseMap(float, float);
 	void makeHeatmap();
 	void writePNGFile(char*, int, int, float*, char*);
+	float cubicLerp(float, int, int, int, int);
+	float smoothNoise(int, int);
 
 
 public:
