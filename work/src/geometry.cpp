@@ -511,8 +511,8 @@ void Geometry::readNAB(std::string filename)
 
 		// Pull out mode from line
 		string mode;
-		objLine >> mode;
-		int index = 0;
+		
+		int index ;
 		std::vector<int> nabs;
 
 		// Reading like this means whitespace at the start of the line is fine
@@ -695,8 +695,9 @@ void Geometry::laplaceSmooth()
 		
 		if (nab.size() != 0) {
 		a = a /nab.size();
-		points.push_back(a);
+		
 		}
+		points.push_back(a);
 	}
  	m_points = points;
 	createDisplayListPoly();
