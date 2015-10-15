@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -15,7 +14,6 @@ using namespace std;
 using namespace comp308;
 
 int width = 256, height =256;
-png_bytep *row_pointers;
 
 Texture::Texture(std::string s){
 	//Image = new image(s);
@@ -27,14 +25,14 @@ Texture::Texture(std::string s){
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
 			cout <<"yes\n";
-			dMap[x] = (uint8_t) (heatMap[i][j] * 256);
+			dMap[x] = (uint8_t) (heatMap[i][j]);
 			x++;
 		}
 	}
 	printf("x %d\n", x);
-	 FILE *fout = fopen("work/res/textures/output.png","wb");
-	 struct TinyPngOut pngout;
-	 if (fout == NULL || TinyPngOut_init(&pngout, fout, width, height) != TINYPNGOUT_OK)
+	FILE *fout = fopen("work/res/textures/output.png","wb");
+	struct TinyPngOut pngout;
+	if (fout == NULL || TinyPngOut_init(&pngout, fout, width, height) != TINYPNGOUT_OK)
 		cout << "Oh fuck" << endl;
 	
 	// Write image data
@@ -90,9 +88,9 @@ float Texture::dotGradient(int xi, int yi, float xf, float yf){
 
 float Texture::noiseMap(float x, float y){
 	cout << "Noise\n";
-	int x0 = (x > 0.0 ? (int)x : (int)x-1);
+	int x0 = (x >= 0.0 ? (int)x : (int)x-1);
 	int x1 = x0+1;
-	int y0 = (y > 0.0 ? (int)y : (int)y-1);
+	int y0 = (y >= 0.0 ? (int)y : (int)y-1);
 	int y1 = y0+1;
 
 	float sx = x - (double)x0;
@@ -112,22 +110,4 @@ float Texture::noiseMap(float x, float y){
 
 image* Texture::getImage(){
 	return Texture::Image;
-}
-
-void setRGB(png_byte *ptr, float val)
-{
-	int v = (int)(val * 767);
-	if (v < 0) v = 0;
-	if (v > 767) v = 767;
-	int offset = v % 256;
-
-	if (v<256) {
-		ptr[0] = 0; ptr[1] = 0; ptr[2] = offset;
-	}
-	else if (v<512) {
-		ptr[0] = 0; ptr[1] = offset; ptr[2] = 255-offset;
-	}
-	else {
-		ptr[0] = offset; ptr[1] = 255-offset; ptr[2] = 0;
-	}
 }
