@@ -120,8 +120,8 @@ void initLight() {
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffintensity2);
 	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient2);
 	glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 6.0f);
-	
-	
+
+
 	float diffintensity3[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float ambient3[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -231,7 +231,7 @@ void draw() {
 		//glRotatef(15, 0, 0, 1);
 	//	glRotatef(180, 0, 1, 0);
 	//	glTranslatef(-5, 0, 0);
-		
+
 	//	boat->renderGeometry(false);
 	//	glPopMatrix();
 		//glPushMatrix();
@@ -442,12 +442,12 @@ void keyboardCallback(unsigned char key, int x, int y) {
 	}
 	cout << (int)key << "\n";
 	if (key == 'o') {
-		//move um in z 
+		//move um in z
 
 		spotDir[2] = spotDir[2] - 0.1f;
 	}
 	else if (key == 'l') {
-		//move down in z 
+		//move down in z
 		spotDir[2] = spotDir[2] + 0.1f;
 	}
 
@@ -456,7 +456,7 @@ void keyboardCallback(unsigned char key, int x, int y) {
 		spotDir[0] = spotDir[0] - 0.1f;
 	}
 	else if (key == ';') {
-		//move down in x 
+		//move down in x
 		spotDir[0] = spotDir[0] + 0.1f;
 	}
 
@@ -588,7 +588,7 @@ int main(int argc, char **argv) {
 	string _dragon = "./res/assets/dragon.obj";
 	string _table = "./res/assets/table.obj";
 	string str = "./res/assets/test.png";
-	
+
 #else
 	cout << "This is Not Windows." << endl;
 	string _bunny = "work/res/assets/bunny.obj";
@@ -597,23 +597,23 @@ int main(int argc, char **argv) {
 	string _table = "work/res/assets/table.obj";
 	string str = "work/res/assets/test.png";
 #endif
-	
-	
+
+
 	Texture* t = new Texture(str);
-	
+
 	//bunny = new Geometry(_bunny);
 	//#ifdef _WIN32
 	//bunny->loadTexture("./res/textures/output.png");
 	//#else
-	//bunny->loadTexture("work/res/textures/output.png");	
+	//bunny->loadTexture("work/res/textures/output.png");
 	//#endif
-	
+
 	//bunny->translate(vec3(0, 0.95, 0));
 	//bunny->setAmbient(vec3(0.25, 0.20725, 0.20725));
 	//bunny->setDiffuse(vec3(1, 0.829, 0.829));
 	//bunny->setSpecular(vec3(0.296648, 0.296648, 0.296648));
 	//bunny->setShine(0.088);
-	
+
 	//boat = new Geometry(_Boat);
 
 	/*string _teapot = "./res/assets/teapot.obj";
@@ -623,7 +623,7 @@ int main(int argc, char **argv) {
 	teapot->setDiffuse(vec3(0.18144, 0.4284, 0.714));
 	teapot->setSpecular(vec3(0.166721, 0.271906, 0.393548));
 	teapot->setShine(0.2);*/
-	
+
 	//string _ball = "./res/assets/sphere.obj";
 	//ball = new Geometry(_ball);
 	//ball->translate(vec3(-5.5, 2.3, 5.5));
@@ -640,12 +640,12 @@ int main(int argc, char **argv) {
 	//torus->setSpecular(vec3(0.7, 0.6, 0.6));
 	//torus->setShine(0.25);
 	//
-	
+
 	table = new Geometry(_dragon);
 	#ifdef _WIN32
 	table->loadTexture("./res/textures/output.png");
 	#else
-	table->loadTexture("work/res/textures/output.png");	
+	table->loadTexture("work/res/textures/output.png");
 	#endif
 	table->changeScale(vec3(1.2, 1.2, 1.2));
 	table->translate(vec3(0, 0.4, 0));
