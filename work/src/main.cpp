@@ -626,7 +626,7 @@ int main(int argc, char **argv) {
 	//
 	string _table = "work/res/assets/table.obj";
 	table = new Geometry(_table);
-	table->loadTexture("work/res/textures/test.png");
+	table->loadTexture("work/res/textures/output.png");
 	table->changeScale(vec3(1.2, 1.2, 1.2));
 	table->translate(vec3(0, 0.4, 0));
 	table->setAmbient(vec3(0.21, 0.1275, 0.054));

@@ -36,7 +36,7 @@ Texture::Texture(std::string s){
 		cout << "Oh fuck" << endl;
 	
 	// Write image data
-	if (TinyPngOut_write(&pngout, dMap, width * height) != TINYPNGOUT_OK)
+	if (TinyPngOut_write(&pngout, dMap, width*height) != TINYPNGOUT_OK)
 		cout << "Oh fuck" << endl;
 	
 	// Check for proper completion
@@ -49,8 +49,8 @@ Texture::Texture(std::string s){
 }
 
 void Texture::makeHeatmap(){
-	for(unsigned int i=0; i<width; i++){
-		for(unsigned int j=0; j<height; j++){
+	for(unsigned int i=0; i<width*2; i++){
+		for(unsigned int j=0; j<height*2; j++){
 			heatMap[i][j] = abs(noiseMap(i, j));
 		}
 	}
