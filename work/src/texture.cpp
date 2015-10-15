@@ -169,8 +169,7 @@ void Texture::generateGradiant(){
 		}
 	}
 	generateOnes();
-	while(noZeros() && factor > 0){
-		
+	while(noZeros()){
 		for(unsigned int i=1; i<width-1; i++){
 			for(unsigned int j=1; j<height-1; j++){
 				if(gradient[i][j] != 0){
@@ -178,7 +177,10 @@ void Texture::generateGradiant(){
 				}
 			}		
 		}
-		factor -= 0.01;
+		factor -= 0.01f;
+		if(factor <= 0){
+			factor = 0.9f;
+		}
 	}
 }
 
