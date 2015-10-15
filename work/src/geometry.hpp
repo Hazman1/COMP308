@@ -72,6 +72,8 @@ private:
 	void createDisplayListWire();
 	void WriteoutNab(std::string temp);
 	void readNAB(std::string);
+	void readEDG(std::string);
+	comp308::vec3 sum(std::vector<int> t);
 
 public:
 	Geometry(std::string);

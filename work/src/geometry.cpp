@@ -51,10 +51,13 @@ Geometry::Geometry(string filename)
 	readOBJ(filename);
 	int length = filename.length() - 3;
 	string temp = filename.substr(0, length);
-	temp = temp + "nab";
-	readNAB(temp);
+	string nab = temp + "nab";
+	string edg = temp + "edg";
 
 
+	readNAB(nab);
+	//readEDG(edg);
+	
 	if (m_triangles.size() > 0)
 	{
 		createDisplayListPoly();
@@ -476,7 +479,7 @@ void Geometry::WriteoutNab(std::string temp)
 {
 	ofstream file;
 	file.open(temp);
-	for (uint i = 0; i < nabours.size(); i++) {
+	for (unsigned int i = 0; i < nabours.size(); i++) {
 		file << i << " ";
 		string t;
 		for (int k : nabours[i]) {
@@ -531,6 +534,58 @@ void Geometry::readNAB(std::string filename)
 		nabours[index] = nabs;
 	}
 
+}
+
+void Geometry::readEDG(std::string filename)
+{
+	ifstream objFile(filename);
+
+	if (!objFile.is_open())
+	{
+		cerr << "Error reading " << filename << endl;
+		return;
+		//throw runtime_error("Error :: could not open file.");
+	}
+
+	cout << "Reading file " << filename << endl;
+
+	// good() means that failbit, badbit and eofbit are all not set
+	while (objFile.good())
+	{
+
+		// Pull out line from file
+		string line;
+		std::getline(objFile, line);
+		istringstream objLine(line);
+
+		// Pull out mode from line
+		string mode;
+
+		int index;
+		std::vector<int> nabs;
+
+		// Reading like this means whitespace at the start of the line is fine
+		// attempting to read from an empty string/line will set the failbit
+		if (!objLine.fail())
+		{
+
+			objLine >> index;
+			nabours.erase(index);
+
+		}
+		
+	}
+
+}
+
+comp308::vec3 Geometry::sum(std::vector<int> t)
+{
+	vec3 a(0, 0, 0);
+	for (int k : t) {
+		a = a + m_points.at(k);
+		a = a / t.size();
+	}
+	return a;
 }
 
 void Geometry::changeScale(comp308::vec3 s)
@@ -684,22 +739,33 @@ void Geometry::clearTransList()
 		*/
 void Geometry::laplaceSmooth()
 {
-	std::vector<vec3> points;
+	//for (int ten = 0; ten < 10; ten++) {
+		std::map<int, vec3> points;
 
-	for (unsigned int i = 0; i < nabours.size(); i++) {
-		vec3 a(0, 0, 0);
-		vector<int> nab = nabours[i];
-		for (int k : nab) {
-			a = a + m_points.at(k);
+
+		for (auto k : nabours) {
+			int index = k.first;
+			vec3 a(0, 0, 0);
+			vector<int> nab = nabours[index];
+			for (int k : nab) {
+				a = a + m_points.at(k)+sum(nabours[k]);
+			}
+
+			if (nab.size() != 0) {
+				a = a / nab.size();
+			}
+			points[index] = a;
 		}
-		
-		if (nab.size() != 0) {
-		a = a /nab.size();
-		
+		for (auto k : points) {
+			m_points[k.first] = k.second;
 		}
-		points.push_back(a);
-	}
- 	m_points = points;
+	//}
 	createDisplayListPoly();
 }
+
+
+
+
+
+
 

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <png.h>
+
 #include "imageLoader.hpp"
 #include "comp308.hpp"
 #include "texture.hpp"
