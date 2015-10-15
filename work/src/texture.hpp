@@ -13,7 +13,7 @@ using namespace std;
 class Texture{
 private:
 	image* Image;
-	float gradient[256][256];
+	float gradient[512][512];
 	float heatMap[256*3][256*3];
 	void generateHeightmap();
 	void generateTexture();
@@ -26,7 +26,7 @@ private:
 	void makeHeatmap();
 	void writePNGFile(char*, int, int, float*, char*);
 	float cubicLerp(float, float, float, float, float);
-	float smoothNoise(int, int, int, float, float, int, int);
+	float smoothNoise(int, float, float, float, float, int, int);
 	float noise2d(int, int);
 
 
