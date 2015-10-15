@@ -22,12 +22,21 @@ Texture::Texture(std::string s){
 	uint8_t *dMap;
 	dMap = (uint8_t*) calloc((width*height)*512, sizeof(uint8_t));
 	unsigned int x = 0;
+	int iters = 32;
+	for(int l=1; l<5; l++){
+		for(int i=0; i<width;i=i+l){
+			for(int j=0; j<height;j++){
+				heatMap[i][j] = smoothNoise(iters, i,j, 0.5, 0.007, 0, 255);
+			}
+		}
+		iters/2;
+	}
+
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
-			heatMap[i][j] = smoothNoise(i,j);
-			dMap[x * 3 + 0] = (uint8_t) (heatMap[i][j] * 100);
-			dMap[x * 3 + 1] = (uint8_t) (heatMap[i+1][j+1] * 100);
-			dMap[x * 3 + 2] = (uint8_t) (heatMap[i+2][j+2] * 100);
+			dMap[x * 3 + 0] = (uint8_t) (heatMap[i][j] * 255);
+			dMap[x * 3 + 1] = (uint8_t) (heatMap[i+1][j+1] * 255);
+			dMap[x * 3 + 2] = (uint8_t) (heatMap[i+2][j+2] * 255);
 			x++;
 		}
 	}
@@ -50,11 +59,24 @@ Texture::Texture(std::string s){
 	fclose(fout);
 }
 
-float Texture::smoothNoise(int x, int y){
-	float corner = heatMap[x-1][y-1] + heatMap[x+1][y-1] +  heatMap[x-1][y+1] + heatMap[x+1][y+1] / 16.0;
-	float side = heatMap[x-1][y] + heatMap[x+1][y] + heatMap[x][y-1] + heatMap[x][y+1] / 8.0;
-	float centre = heatMap[x][y] / 4.0 ;
-	return corner + side+ centre;
+float Texture::smoothNoise(int iters, int x, int y, float pers, float scale, int low, int high){
+	int maxAmp = 0;
+	int amp = 1;
+	float freq = scale;
+	float noise = 0;
+
+	for(int i=0; i<iters;i++){
+		noise += noise2d(x*freq, y*freq);
+		maxAmp += amp;
+		amp *= pers;
+		freq *= 2;
+	}
+
+	noise /= maxAmp;
+
+	 noise = noise * (high - low) / 2 + (high + low) / 2;
+	
+	return noise;
 }	
 
 void Texture::makeHeatmap(){
@@ -78,6 +100,15 @@ float Texture::randomValue(int val){
 	x = 1.0-((x*(x*x*15731 + 789221) + 1376312589) & 2147483647);
 	float z = x / 1073741824.0;
 	return z;
+}
+
+float Texture::noise2d(int x, int y){
+	int z = x+y*53;
+	z = (z<<13) ^ z;
+	z = 1.0-((z*(z*z*15731 + 789221) + 1376312589) & 2147483647);
+	float w = z / 1073741824.0;
+	return w;
+
 }
 
 float Texture::lerp(float t, float a, float b){
