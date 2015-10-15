@@ -220,9 +220,9 @@ void draw() {
 	if (!g_useShader) {
 
 
-		//glPushMatrix();
-		//bunny->renderGeometry(false);
-		//glPopMatrix();
+		glPushMatrix();
+		bunny->renderGeometry(false);
+		glPopMatrix();
 
 		glPushMatrix();
 		glRotatef(120, 1, 0, 0);
@@ -284,9 +284,9 @@ void draw() {
 		box->renderGeometry(true);
 		glPopMatrix();*/
 
-		/*glPushMatrix();
+		glPushMatrix();
 		bunny->renderGeometry(true);
-		glPopMatrix();*/
+		glPopMatrix();
 
 		glPushMatrix();
 		glRotatef(90, 1, 0, 0);
@@ -387,7 +387,7 @@ void keyboardCallback(unsigned char key, int x, int y) {
 		}
 	}
 	else if (key == '4') {
-		if (light3) {
+		if (light3) {http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
 			light3 = false;
 		}
 		else {
@@ -459,7 +459,7 @@ void keyboardCallback(unsigned char key, int x, int y) {
 	}
 
 	if (key == ' ') {
-		boat->laplaceSmooth();
+		bunny->laplaceSmooth();
 	}
 	if (key == 27)exit(0);
 
@@ -470,7 +470,7 @@ void keyboardCallback(unsigned char key, int x, int y) {
 }
 
 
-// Special Keyboard callback
+// Special Keybhttp://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdfoard callback
 // Called once per button state change
 //
 void specialCallback(int key, int x, int y) {
@@ -591,12 +591,13 @@ int main(int argc, char **argv) {
 	string str = "work/res/assets/test.png";
 	Texture* t = new Texture(str);
 	
-	/*bunny = new Geometry(_bunny);
+	bunny = new Geometry(_bunny);
+	bunny->loadTexture("work/res/textures/output.png");
 	bunny->translate(vec3(0, 0.95, 0));
 	bunny->setAmbient(vec3(0.25, 0.20725, 0.20725));
 	bunny->setDiffuse(vec3(1, 0.829, 0.829));
 	bunny->setSpecular(vec3(0.296648, 0.296648, 0.296648));
-	bunny->setShine(0.088);*/
+	bunny->setShine(0.088);
 	
 	boat = new Geometry(_Boat);
 
