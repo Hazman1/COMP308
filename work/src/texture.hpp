@@ -5,7 +5,10 @@
 #include <string>
 #include <vector>
 #include "imageLoader.hpp"
+#include "TinyPngOut.hpp"
 #include "comp308.hpp"
+
+using namespace std;
 
 class Texture{
 private:
@@ -21,9 +24,10 @@ private:
 	float dotGradient(int, int, float, float);
 	float noiseMap(float, float);
 	void makeHeatmap();
+	void writePNGFile(char*, int, int, float*, char*);
 
 
 public:
-	Texture(std::string&);
+	Texture(std::string);
 	image* getImage();
 };

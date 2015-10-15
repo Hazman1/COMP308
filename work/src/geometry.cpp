@@ -25,12 +25,10 @@
 #include "imageLoader.hpp"
 #include "comp308.hpp"
 #include "geometry.hpp"
+#include "texture.hpp"
 
 using namespace std;
 using namespace comp308;
-
-
-
 
 Geometry::Geometry(string filename)
 {
