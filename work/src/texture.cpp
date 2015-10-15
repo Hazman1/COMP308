@@ -20,13 +20,15 @@ Texture::Texture(std::string s){
 	generateGradiant();
 	makeHeatmap();
 	uint8_t *dMap;
-	dMap = (uint8_t*) calloc((width*height)*512, sizeof(uint8_t));
+	uint8_t *gMap;
+	dMap = (uint8_t*) calloc(width*height*3, sizeof(uint8_t));
+	gMap = (uint8_t*) calloc(width*height*3, sizeof(uint8_t));
 	unsigned int x = 0;
 	int iters = 1024;
 	for(int l=1; l<5; l++){
 		for(int i=0; i<width;i=i+l){
 			for(int j=0; j<height;j++){
-				heatMap[i][j] = smoothNoise(iters, i,j, 0.5, 0.007, 0, 255);
+				heatMap[i][j] = smoothNoise(iters, gradient[i][j], gradient[i][j], 0.5, 0.007, 0, 255);
 			}
 		}
 		iters/2;
@@ -36,11 +38,19 @@ Texture::Texture(std::string s){
 		for(int j=0; j<height;j++){
 			dMap[x * 3 + 0] = (uint8_t) ((int)(heatMap[i][j] * 255) >> 32);
 			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 16);
-			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 4);
+			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 0);
 			x++;
 		}
 	}
-
+	x=0;
+	for(int i=0; i<width;i++){
+		for(int j=0; j<height;j++){
+			gMap[x * 3 + 0] = (uint8_t) gradient[i][j] *255;
+			gMap[x * 3 + 1] = (uint8_t) gradient[i+1][j+1]*255;
+			gMap[x * 3 + 2] = (uint8_t) gradient[i+2][j+2]*255;
+			x++;
+		}
+	}
 	FILE *fout = fopen("work/res/textures/output.png","wb");
 	struct TinyPngOut pngout;
 	if (fout == NULL || TinyPngOut_init(&pngout, fout, width, height) != TINYPNGOUT_OK)
@@ -57,13 +67,30 @@ Texture::Texture(std::string s){
 		cout << "Texture generated\n";
 	}
 	fclose(fout);
+
+	fout = fopen("work/res/textures/grad.png","wb");
+	struct TinyPngOut pngout2;
+	if (fout == NULL || TinyPngOut_init(&pngout2, fout, width, height) != TINYPNGOUT_OK)
+		cout << "error" << endl;
+	
+	// Write image data
+	if (TinyPngOut_write(&pngout2, gMap, width*height) != TINYPNGOUT_OK)
+		cout << "error" << endl;
+	
+	// Check for proper completion
+	if (TinyPngOut_write(&pngout2, NULL, 0) != TINYPNGOUT_DONE)
+		cout << "error" << endl;
+	else{
+		cout << "Texture generated\n";
+	}
+	fclose(fout);
 }
 
-float Texture::smoothNoise(int iters, int x, int y, float pers, float scale, int low, int high){
+float Texture::smoothNoise(int iters, float x, float y, float pers, float scale, int low, int high){
 	int maxAmp = 0;
 	int amp = 1;
 	float freq = scale;
-	float noise = 0;
+	float noise = 1;
 
 	for(int i=0; i<iters;i++){
 		noise += noise2d(x*freq+1, y*freq+1);
@@ -80,17 +107,33 @@ float Texture::smoothNoise(int iters, int x, int y, float pers, float scale, int
 }	
 
 void Texture::makeHeatmap(){
-	for(unsigned int i=0; i<width*2; i++){
-		for(unsigned int j=0; j<height*2; j++){
+	for(unsigned int i=0; i<width*3; i++){
+		for(unsigned int j=0; j<height*3; j++){
 			heatMap[i][j] = abs(noiseMap(i, j));
 		}
 	}
 }
 
+float setGrad(int i, int j){
+	 
+	float z, x, y;
+	if(i != width/2 && j != height/2){
+		x = width/2 - i;
+		y = width/2 - j;
+		z = x+y;
+		return 1/z;
+	}
+	return 1;
+}
+
 void Texture::generateGradiant(){
 	for(unsigned int i=0; i<width; i++){
 		for(unsigned int j=0; j<height; j++){
-			gradient[i][j] = randomValue(i*j+i+j);
+			if(i==0 || j==0 || i==width-1 || j==height-1){
+				gradient[i][j] = 0;
+			}else{
+				gradient[i][j] = setGrad(i, j);
+			}
 		}
 	}
 }
@@ -138,7 +181,7 @@ float Texture::dotGradient(int xi, int yi, float xf, float yf){
 float Texture::noiseMap(float x, float y){
 	float zr =0, zi=0;
 	int i=0;
-	for(;i<256;i++){
+	for(;i<width;i++){
 		if(zr*zr + zi*zi > 4){
 			break;
 		}
@@ -147,8 +190,8 @@ float Texture::noiseMap(float x, float y){
 		zr = temp;
 	}
 
-	float j = (double)i / 256;
-	return (int)(pow(j, 0.6) * 255 +0.5) << 32 | (int)(pow(j, 0.3) * 255 +0.5) << 16 | (int)(pow(j, 0.1) *255 +0.5) << 4;
+	float j = (double)i / width;
+	return (int)(pow(j, 0.6) * 255 +0.5) << 32 | (int)(pow(j, 0.3) * 255 +0.5) << 16 | (int)(pow(j, 0.1) *255 +0.5) << 0;
 	/*int x0 = (x >= 0.0 ? (int)x : (int)x-1);
 	int x1 = x0+1;
 	int y0 = (y >= 0.0 ? (int)y : (int)y-1);
