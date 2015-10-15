@@ -817,13 +817,13 @@ void Geometry::laplaceSmooth()
         for (int k : nab)
         {
             a = a + m_points.at(k);
-			a = a + sum(nabours[k]);
-			num = nabours[k].size();
+			//a = a + sum(nabours[k]);
+			//num = nabours[k].size();
         }
 		
-        if (nab.size() != 0)
+        if (num != 0)
         {
-            a = a /num;
+            a = a / num;
 		
         }
         points[index] = a;
@@ -833,7 +833,7 @@ void Geometry::laplaceSmooth()
         m_points[k.first] = k.second;
     }
 
-	createNormals();
+//	createNormals();
 	createUVS();
     //}
     //createDisplayListPoly();

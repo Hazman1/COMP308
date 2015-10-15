@@ -59,15 +59,15 @@ Texture::Texture(std::string s){
 #endif
 	struct TinyPngOut pngout;
 	if (fout == NULL || TinyPngOut_init(&pngout, fout, width, height) != TINYPNGOUT_OK)
-		cout << "error" << endl;
+		cout << "error init" << endl;
 	
 	// Write image data
 	if (TinyPngOut_write(&pngout, dMap, width*height) != TINYPNGOUT_OK)
-		cout << "error" << endl;
+		cout << "error write" << endl;
 	
 	// Check for proper completion
 	if (TinyPngOut_write(&pngout, NULL, 0) != TINYPNGOUT_DONE)
-		cout << "error" << endl;
+		cout << "error complete" << endl;
 	else{
 		cout << "Texture generated\n";
 	}
@@ -78,18 +78,17 @@ Texture::Texture(std::string s){
 	fout = fopen("work/res/textures/grad.png", "wb");
 #endif
 
-	fout = fopen("work/res/textures/grad.png","wb");
 	struct TinyPngOut pngout2;
 	if (fout == NULL || TinyPngOut_init(&pngout2, fout, width, height) != TINYPNGOUT_OK)
-		cout << "error" << endl;
+		cout << "error init" << endl;
 	
 	// Write image data
 	if (TinyPngOut_write(&pngout2, gMap, width*height) != TINYPNGOUT_OK)
-		cout << "error" << endl;
+		cout << "error write" << endl;
 	
 	// Check for proper completion
 	if (TinyPngOut_write(&pngout2, NULL, 0) != TINYPNGOUT_DONE)
-		cout << "error" << endl;
+		cout << "error complete" << endl;
 	else{
 		cout << "Texture generated\n";
 	}
@@ -153,7 +152,7 @@ void Texture::setGrad(int i, int j){
 }
 
 void Texture::generateOnes(){
-	for(uint i=1; i<height-1; i++){
+	for(unsigned int i=1; i<height-1; i++){
 		int x = ((int) (rand() % width-1)) + 1;
 		int y = ((int) (rand() % height-1)) + 1;
 		gradient[x][y] = 1.0;
@@ -161,8 +160,8 @@ void Texture::generateOnes(){
 }
 
 bool Texture::noZeros(){
-	for(uint i=1; i<width-1; i++){
-		for(uint j=1; j<height-1; j++){
+	for(unsigned int i=1; i<width-1; i++){
+		for(unsigned int j=1; j<height-1; j++){
 			if(gradient[i][j] == 0){
 				return true;
 			}
