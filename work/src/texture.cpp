@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <png.h>
 #include "imageLoader.hpp"
 #include "comp308.hpp"
 #include "texture.hpp"
@@ -10,6 +11,17 @@
 Texture::Texture(std::string &s){
 	Image = new image(s);
 	generateGradiant();
+	makeHeatmap();
+}
+
+void Texture::makeHeatmap(){
+	for(unsigned int i=0; i<sizeof(heatMap); i++){
+		for(unsigned int j=0; j<sizeof(heatMap[0]); j++){
+			float x= randomValue(i*j+i);
+			float y= randomValue(i*j+j);
+			heatMap[i][j] = noiseMap(x, y);
+		}
+	}
 }
 
 void Texture::generateGradiant(){
@@ -36,7 +48,7 @@ float Texture::dotGradient(int xi, int yi, float xf, float yf){
 
 	float dx = xf - (double)xi;
 	float dy = yf - (double)yi;
-	return dy;
+	return dx*f + dy*f;
 }
 
 float Texture::noiseMap(float x, float y){

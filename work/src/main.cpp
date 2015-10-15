@@ -64,7 +64,7 @@ bool g_useShader = false;
 //Geometry *bunny;
 Geometry *boat;
 //Geometry *sphere;
-//Geometry *table;
+Geometry *table;
 //Geometry *teapot;
 //Geometry *torus;
 
@@ -243,9 +243,9 @@ void draw() {
 		//teapot->renderGeometry(false);
 		//glPopMatrix();
 
-		//glPushMatrix();
-		//table->renderGeometry(false);
-		//glPopMatrix();
+		glPushMatrix();
+		table->renderGeometry(false);
+		glPopMatrix();
 
 		//glPushMatrix();
 		//box->renderGeometry(false);
@@ -275,9 +275,9 @@ void draw() {
 		//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
 		//glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
 
-		/*glPushMatrix();
+		glPushMatrix();
 		table->renderGeometry(true);
-		glPopMatrix();*/
+		glPopMatrix();
 
 	/*	glPushMatrix();
 		box->renderGeometry(true);
@@ -620,15 +620,15 @@ int main(int argc, char **argv) {
 	//torus->setSpecular(vec3(0.7, 0.6, 0.6));
 	//torus->setShine(0.25);
 	//
-	//string _table = "./res/assets/table.obj";
-	//table = new Geometry(_table);
-	//table->loadTexture("work/res/textures/wood.jpg");
-	//table->changeScale(vec3(1.2, 1.2, 1.2));
-	////table->translate(vec3(0, 0.4, 0));
-	////table->setAmbient(vec3(0.21, 0.1275, 0.054));
-	////table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
-	////table->setSpecular(vec3(0.393548,0.271906,0.166721));
-	////table->setShine(0.78125f);
+	string _table = "work/res/assets/table.obj";
+	table = new Geometry(_table);
+	table->loadTexture("work/res/textures/test.png");
+	table->changeScale(vec3(1.2, 1.2, 1.2));
+	table->translate(vec3(0, 0.4, 0));
+	table->setAmbient(vec3(0.21, 0.1275, 0.054));
+	table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
+	table->setSpecular(vec3(0.393548,0.271906,0.166721));
+	table->setShine(0.78125f);
 	//
 	//string _box = "./res/assets/box.obj";
 	//box = new Geometry(_box);
