@@ -56,7 +56,7 @@ Geometry::Geometry(string filename)
 
 
 	readNAB(nab);
-	//readEDG(edg);
+	readEDG(edg);
 	
 	if (m_triangles.size() > 0)
 	{
@@ -578,15 +578,7 @@ void Geometry::readEDG(std::string filename)
 
 }
 
-comp308::vec3 Geometry::sum(std::vector<int> t)
-{
-	vec3 a(0, 0, 0);
-	for (int k : t) {
-		a = a + m_points.at(k);
-		a = a / t.size();
-	}
-	return a;
-}
+
 
 void Geometry::changeScale(comp308::vec3 s)
 {
@@ -748,7 +740,8 @@ void Geometry::laplaceSmooth()
 			vec3 a(0, 0, 0);
 			vector<int> nab = nabours[index];
 			for (int k : nab) {
-				a = a + m_points.at(k)+sum(nabours[k]);
+				a = a + m_points.at(k);
+				//a = a + sum(nabours[k]);
 			}
 
 			if (nab.size() != 0) {
@@ -763,6 +756,15 @@ void Geometry::laplaceSmooth()
 	createDisplayListPoly();
 }
 
+comp308::vec3 Geometry::sum(std::vector<int> t)
+{
+	vec3 a(0, 0, 0);
+	for (int k : t) {
+		a = a + m_points.at(k);
+		a = a / t.size();
+	}
+	return a;
+}
 
 
 
