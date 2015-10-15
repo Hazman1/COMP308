@@ -13,7 +13,7 @@
 using namespace std;
 using namespace comp308;
 
-int width = 256, height =256;
+int width = 512, height =512;
 float factor = 0.9f;
 
 Texture::Texture(std::string s){
@@ -37,9 +37,9 @@ Texture::Texture(std::string s){
 
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
-			dMap[x * 3 + 0] = (uint8_t) ((int)(heatMap[i][j] * 255) >> 16);
-			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 16);
-			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 16);
+			dMap[x * 3 + 0] = (uint8_t) ((int)(heatMap[i][j] * 255) >> 12);
+			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 8);
+			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 4);
 			x++;
 		}
 	}
@@ -144,10 +144,9 @@ void Texture::setGrad(int i, int j){
 }
 
 void Texture::generateOnes(){
-	srand (time(NULL));
 	for(uint i=1; i<height-1; i++){
-		int x = rand() % width-1 + 1;
-		int y = rand() % height-i + 1;
+		int x = ((int) (rand() % width-1)) + 1;
+		int y = ((int) (rand() % height-1)) + 1;
 		gradient[x][y] = 1.0;
 	}
 }
@@ -171,6 +170,7 @@ void Texture::generateGradiant(){
 	}
 	generateOnes();
 	while(noZeros() && factor > 0){
+		
 		for(unsigned int i=1; i<width-1; i++){
 			for(unsigned int j=1; j<height-1; j++){
 				if(gradient[i][j] != 0){
@@ -178,7 +178,7 @@ void Texture::generateGradiant(){
 				}
 			}		
 		}
-		factor -= 0.1;
+		factor -= 0.01;
 	}
 }
 
@@ -235,7 +235,7 @@ float Texture::noiseMap(float x, float y){
 	}
 
 	float j = (double)i / width;
-	return (int)(pow(j, 0.6) * 255 +0.5) << 16 | (int)(pow(j, 0.3) * 255 +0.5) << 16 | (int)(pow(j, 0.1) *255 +0.5) << 16;
+	return (int)(pow(j, 0.6) * 255 +0.5) << 12 | (int)(pow(j, 0.3) * 255 +0.5) << 8 | (int)(pow(j, 0.1) *255 +0.5) << 4;
 	/*int x0 = (x >= 0.0 ? (int)x : (int)x-1);
 	int x1 = x0+1;
 	int y0 = (y >= 0.0 ? (int)y : (int)y-1);

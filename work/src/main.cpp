@@ -649,10 +649,10 @@ int main(int argc, char **argv) {
 	#endif
 	table->changeScale(vec3(1.2, 1.2, 1.2));
 	table->translate(vec3(0, 0.4, 0));
-	table->setAmbient(vec3(0.21, 0.1275, 0.054));
-	table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
-	table->setSpecular(vec3(0.393548,0.271906,0.166721));
-	table->setShine(0.78125f);
+	table->setAmbient(vec3(0.329412, 0.223529, 0.027451));
+	table->setDiffuse(vec3(0.780392, 0.568627, 0.113725));
+	table->setSpecular(vec3(0.992157,0.941176,0.807843));
+	table->setShine(0.21794872);
 	//
 	//string _box = "./res/assets/box.obj";
 	//box = new Geometry(_box);
