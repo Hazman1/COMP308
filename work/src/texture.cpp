@@ -34,9 +34,9 @@ Texture::Texture(std::string s){
 
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
-			dMap[x * 3 + 0] = (uint8_t) ( (int)(heatMap[i][j] * 255) >> 32);
+			dMap[x * 3 + 0] = (uint8_t) ((int)(heatMap[i][j] * 255) >> 32);
 			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 16);
-			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 8);
+			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 4);
 			x++;
 		}
 	}
@@ -148,7 +148,7 @@ float Texture::noiseMap(float x, float y){
 	}
 
 	float j = (double)i / 256;
-	return (int)(pow(j, 0.6) * 255 +0.5) << 16 | (int)(pow(j, 0.3) * 255 +0.5) << 8 | (int)(pow(j, 0.1) *255 +0.5) << 2;
+	return (int)(pow(j, 0.6) * 255 +0.5) << 32 | (int)(pow(j, 0.3) * 255 +0.5) << 16 | (int)(pow(j, 0.1) *255 +0.5) << 4;
 	/*int x0 = (x >= 0.0 ? (int)x : (int)x-1);
 	int x1 = x0+1;
 	int y0 = (y >= 0.0 ? (int)y : (int)y-1);
