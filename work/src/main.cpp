@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
+#include "texture.hpp"
 
 #include "comp308.hpp"
 //#include "imageLoader.hpp"
@@ -64,7 +65,7 @@ bool g_useShader = false;
 //Geometry *bunny;
 Geometry *boat;
 //Geometry *sphere;
-// Geometry *table;
+Geometry *table;
 //Geometry *teapot;
 //Geometry *torus;
 
@@ -243,9 +244,9 @@ void draw() {
 		//teapot->renderGeometry(false);
 		//glPopMatrix();
 
-		// glPushMatrix();
-		// table->renderGeometry(false);
-		// glPopMatrix();
+		glPushMatrix();
+		table->renderGeometry(false);
+		glPopMatrix();
 
 		//glPushMatrix();
 		//box->renderGeometry(false);
@@ -275,9 +276,9 @@ void draw() {
 		//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
 		//glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
 
-		// glPushMatrix();
-		// table->renderGeometry(true);
-		// glPopMatrix();
+		glPushMatrix();
+		table->renderGeometry(true);
+		glPopMatrix();
 
 	/*	glPushMatrix();
 		box->renderGeometry(true);
@@ -549,7 +550,7 @@ int main(int argc, char **argv) {
 
 	// Initialise window size and create window
 	glutInitWindowSize(g_winWidth, g_winHeight);
-	g_mainWindow = glutCreateWindow("COMP308 Assignment 3");
+	g_mainWindow = glutCreateWindow("Final Project");
 
 
 	// Initilise GLEW
@@ -587,6 +588,9 @@ int main(int argc, char **argv) {
 	string _Boat = "work/res/assets/Boat.obj";
 #endif
 	
+	string str = "work/res/assets/test.png";
+	Texture* t = new Texture(str);
+	
 	/*bunny = new Geometry(_bunny);
 	bunny->translate(vec3(0, 0.95, 0));
 	bunny->setAmbient(vec3(0.25, 0.20725, 0.20725));
@@ -620,15 +624,15 @@ int main(int argc, char **argv) {
 	//torus->setSpecular(vec3(0.7, 0.6, 0.6));
 	//torus->setShine(0.25);
 	//
-	// string _table = "work/res/assets/table.obj";
-	// table = new Geometry(_table);
-	// table->loadTexture("work/res/textures/test.png");
-	// table->changeScale(vec3(1.2, 1.2, 1.2));
-	// table->translate(vec3(0, 0.4, 0));
-	// table->setAmbient(vec3(0.21, 0.1275, 0.054));
-	// table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
-	// table->setSpecular(vec3(0.393548,0.271906,0.166721));
-	// table->setShine(0.78125f);
+	string _table = "work/res/assets/table.obj";
+	table = new Geometry(_table);
+	table->loadTexture("work/res/textures/output.png");
+	table->changeScale(vec3(1.2, 1.2, 1.2));
+	table->translate(vec3(0, 0.4, 0));
+	table->setAmbient(vec3(0.21, 0.1275, 0.054));
+	table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
+	table->setSpecular(vec3(0.393548,0.271906,0.166721));
+	table->setShine(0.78125f);
 	//
 	//string _box = "./res/assets/box.obj";
 	//box = new Geometry(_box);
@@ -647,7 +651,6 @@ int main(int argc, char **argv) {
 	//delete teapot;
 	//delete box;
 	//delete torus;
-
 
 
 	// Don't forget to delete all pointers that we made

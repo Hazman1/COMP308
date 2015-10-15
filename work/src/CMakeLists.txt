@@ -13,6 +13,7 @@ SET(headers
 	"shaderLoader.hpp"
 	"imageLoader.hpp"
 	"texture.hpp"
+	"TinyPngOut.hpp"
 )
 
 
@@ -23,6 +24,7 @@ SET(sources
 	"splines.cpp"
 	"geometry.cpp"
 	"texture.cpp"
+	"TinyPngOut.cpp"
 )
 
 # Add executable target and link libraries
