@@ -62,12 +62,14 @@ Geometry::Geometry(string filename)
         createDisplayListWire();
     }
 
-    if(!(m_uvs.size()>0))
-    {
-
+    //if(!(m_uvs.size()>0))
+    //{
+    cout<<"Normals"<<endl;
+        //createNormals();
+    cout << "UVS"<<endl;
         createUVS();
-
-    }
+    cout << "fin"<<endl;
+    //}
     if (!(nabours.size() > 0))
     {
         generateNabours();
@@ -159,7 +161,7 @@ void Geometry::readOBJ(string filename)
             {
                 vec3 v;
                 objLine >> v.x >> v.y >> v.z;
-                m_points.push_back((v*10));
+                m_points.push_back((v));
 
             }
             else if (mode == "vn")
@@ -283,7 +285,18 @@ void Geometry::createUVS()
     {
         triangle t = m_triangles.at(i);
         for(vertex k:t.v){
-        vec2 cat((std::asin((m_normals.at(k.n)).x)/pi()+0.5),(std::asin((m_normals.at(k.n)).y)/pi()+0.5));
+        float r = 10;
+        float nv = m_normals.at(k.n).x;
+        float nu = m_normals.at(k.n).y;
+
+        float x = r*std::sin(nv) * std::cos(2*nu);
+        float y = r*std::sin(nv) * std::sin(2*nu);
+        float z = r*std::cos(nv);
+
+        float u =  std::acos(z/r)/ pi();
+        float v =  std::acos((x/r * std::sin(nv)))/2*pi();
+
+        vec2 cat(u,v);
         k.t=m_uvs.size();
         m_uvs.push_back(cat);
         }
@@ -381,6 +394,7 @@ void Geometry::createNormals()
         }
         if (p.normals.size() > 0)
         {
+            cout<< "normal = "<<normal << "  p.normals.size() ="<< p.normals.size()<<endl;
             normal /= vec3(p.normals.size());
         }
         m_normals.push_back(normal);//vec3((float)t));
@@ -687,7 +701,7 @@ void Geometry::renderGeometry(bool shade)
 
     glPushMatrix();
     unsigned int i;
-    for (i = 1; i < m_triangles.size() - 1; i++)
+    for (i = 0; i < m_triangles.size(); i++)
     {
         glBegin(GL_TRIANGLES);
 
