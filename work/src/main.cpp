@@ -58,6 +58,21 @@ GLuint g_shader = 0;
 bool g_useShader = false;
 
 
+#ifdef _WIN32
+	string _bunny = "./res/assets/bunny.obj";
+	string _Boat = "./res/assets/Boat.obj";
+	string _dragon = "./res/assets/dragon.obj";
+	string _table = "./res/assets/table.obj";
+	string str = "./res/assets/test.png";
+
+#else
+	string _bunny = "work/res/assets/bunny.obj";
+	string _Boat = "work/res/assets/Boat.obj";
+	string _dragon = "work/res/assets/dragon.obj";
+	string _table = "work/res/assets/table.obj";
+	string str = "work/res/assets/test.png";
+#endif
+
 // Objects to be rendered
 //
 //Geometry *ball;
@@ -464,6 +479,16 @@ void keyboardCallback(unsigned char key, int x, int y) {
 		//bunny->laplaceSmooth();
 		table->laplaceSmooth();
 	 }
+	 
+	 if(key== 'n'){
+	  Texture* t = new Texture(str); 
+	  #ifdef _WIN32
+	table->loadTexture("./res/textures/output.png");
+	#else
+	table->loadTexture("work/res/textures/output.png");
+	#endif
+	 }
+	 
 	if (key == 27)exit(0);
 
 	//101, 103
@@ -581,22 +606,7 @@ int main(int argc, char **argv) {
 
 	initLight();
 	//initShader();
-#ifdef _WIN32
-	cout << "This is Windows. Through visual studios" << endl;
-	string _bunny = "./res/assets/bunny.obj";
-	string _Boat = "./res/assets/Boat.obj";
-	string _dragon = "./res/assets/dragon.obj";
-	string _table = "./res/assets/table.obj";
-	string str = "./res/assets/test.png";
 
-#else
-	cout << "This is Not Windows." << endl;
-	string _bunny = "work/res/assets/bunny.obj";
-	string _Boat = "work/res/assets/Boat.obj";
-	string _dragon = "work/res/assets/dragon.obj";
-	string _table = "work/res/assets/table.obj";
-	string str = "work/res/assets/test.png";
-#endif
 
 
 	Texture* t = new Texture(str);
@@ -641,7 +651,7 @@ int main(int argc, char **argv) {
 	//torus->setShine(0.25);
 	//
 
-	table = new Geometry(_table);
+	table = new Geometry(_dragon);
 	#ifdef _WIN32
 	table->loadTexture("./res/textures/output.png");
 	#else
