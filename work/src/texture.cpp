@@ -177,8 +177,7 @@ void Texture::generateGradiant(){
 		}
 	}
 	generateOnes();
-	while(noZeros() && factor > 0){
-		
+	while(noZeros()){
 		for(unsigned int i=1; i<width-1; i++){
 			for(unsigned int j=1; j<height-1; j++){
 				if(gradient[i][j] != 0){
@@ -186,7 +185,7 @@ void Texture::generateGradiant(){
 				}
 			}		
 		}
-		factor -= 0.1;
+		factor -= 0.01;
 	}
 }
 
@@ -243,7 +242,7 @@ float Texture::noiseMap(float x, float y){
 	}
 
 	float j = (double)i / width;
-	return (int)(pow(j, 0.6) * 255 +0.5) << 16 | (int)(pow(j, 0.3) * 255 +0.5) << 16 | (int)(pow(j, 0.1) *255 +0.5) << 16;
+	return (int)(pow(j, 0.6) * 255 +0.5) << 12 | (int)(pow(j, 0.3) * 255 +0.5) << 8 | (int)(pow(j, 0.1) *255 +0.5) << 4;
 	/*int x0 = (x >= 0.0 ? (int)x : (int)x-1);
 	int x1 = x0+1;
 	int y0 = (y >= 0.0 ? (int)y : (int)y-1);
