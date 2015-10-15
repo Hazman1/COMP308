@@ -52,7 +52,11 @@ Texture::Texture(std::string s){
 			x++;
 		}
 	}
+#ifdef _WIN32
+	FILE *fout = fopen("./res/textures/output.png", "wb");
+#else
 	FILE *fout = fopen("work/res/textures/output.png","wb");
+#endif
 	struct TinyPngOut pngout;
 	if (fout == NULL || TinyPngOut_init(&pngout, fout, width, height) != TINYPNGOUT_OK)
 		cout << "error" << endl;
@@ -68,8 +72,12 @@ Texture::Texture(std::string s){
 		cout << "Texture generated\n";
 	}
 	fclose(fout);
-
-	fout = fopen("work/res/textures/grad.png","wb");
+#ifdef _WIN32
+	fout = fopen("./res/textures/grad.png", "wb");
+#else
+	fout = fopen("work/res/textures/grad.png", "wb");
+#endif
+	
 	struct TinyPngOut pngout2;
 	if (fout == NULL || TinyPngOut_init(&pngout2, fout, width, height) != TINYPNGOUT_OK)
 		cout << "error" << endl;
@@ -145,7 +153,7 @@ void Texture::setGrad(int i, int j){
 
 void Texture::generateOnes(){
 	srand (time(NULL));
-	for(uint i=1; i<height-1; i++){
+	for(unsigned int i=1; i<height-1; i++){
 		int x = rand() % width-1 + 1;
 		int y = rand() % height-i + 1;
 		gradient[x][y] = 1.0;
@@ -153,8 +161,8 @@ void Texture::generateOnes(){
 }
 
 bool Texture::noZeros(){
-	for(uint i=1; i<width-1; i++){
-		for(uint j=1; j<height-1; j++){
+	for(unsigned int i=1; i<width-1; i++){
+		for(unsigned int j=1; j<height-1; j++){
 			if(gradient[i][j] == 0){
 				return true;
 			}

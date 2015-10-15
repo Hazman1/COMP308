@@ -641,7 +641,7 @@ int main(int argc, char **argv) {
 	//torus->setShine(0.25);
 	//
 
-	table = new Geometry(_dragon);
+	table = new Geometry(_table);
 	#ifdef _WIN32
 	table->loadTexture("./res/textures/output.png");
 	#else

@@ -62,21 +62,14 @@ Geometry::Geometry(string filename)
         createDisplayListWire();
     }
 
-    //if(!(m_uvs.size()>0))
-    //{
-    cout<<"Normals"<<endl;
-        //createNormals();
-    cout << "UVS"<<endl;
-        createUVS();
-    cout << "fin"<<endl;
-    //}
+  
     if (!(nabours.size() > 0))
     {
         generateNabours();
         WriteoutNab(nab);
     }
     readEDG(edg);
-
+	nabours.erase(m_points.size());
 }
 
 void Geometry::generateNabours()
@@ -819,15 +812,19 @@ void Geometry::laplaceSmooth()
         int index = k.first;
         vec3 a(0, 0, 0);
         vector<int> nab = nabours[index];
+		int num = 0;
+		num = nab.size();
         for (int k : nab)
         {
             a = a + m_points.at(k);
-            //a = a + sum(nabours[k]);
+			a = a + sum(nabours[k]);
+			num = nabours[k].size();
         }
-
+		
         if (nab.size() != 0)
         {
-            a = a / nab.size();
+            a = a /num;
+		
         }
         points[index] = a;
     }
@@ -835,8 +832,11 @@ void Geometry::laplaceSmooth()
     {
         m_points[k.first] = k.second;
     }
+
+	createNormals();
+	createUVS();
     //}
-    createDisplayListPoly();
+    //createDisplayListPoly();
 }
 
 comp308::vec3 Geometry::sum(std::vector<int> t)
@@ -845,7 +845,7 @@ comp308::vec3 Geometry::sum(std::vector<int> t)
     for (int k : t)
     {
         a = a + m_points.at(k);
-        a = a / t.size();
+
     }
     return a;
 }
