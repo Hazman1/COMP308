@@ -587,7 +587,6 @@ int main(int argc, char **argv) {
 	string _Boat = "./res/assets/Boat.obj";
 	string _dragon = "./res/assets/dragon.obj";
 	string _table = "./res/assets/table.obj";
-	string _teapot = "./res/assets/teapot.obj";
 	string str = "./res/assets/test.png";
 
 #else
@@ -596,7 +595,6 @@ int main(int argc, char **argv) {
 	string _Boat = "work/res/assets/Boat.obj";
 	string _dragon = "work/res/assets/dragon.obj";
 	string _table = "work/res/assets/table.obj";
-	string _teapot = "work/res/assets/teapot.obj";
 	string str = "work/res/assets/test.png";
 #endif
 
@@ -643,7 +641,7 @@ int main(int argc, char **argv) {
 	//torus->setShine(0.25);
 	//
 
-	table = new Geometry(_teapot);
+	table = new Geometry(_dragon);
 	#ifdef _WIN32
 	table->loadTexture("./res/textures/output.png");
 	#else

@@ -28,6 +28,9 @@ private:
 	float cubicLerp(float, float, float, float, float);
 	float smoothNoise(int, float, float, float, float, int, int);
 	float noise2d(int, int);
+	void generateOnes();
+	bool noZeros();
+	void setGrad(int, int);
 
 
 public:
