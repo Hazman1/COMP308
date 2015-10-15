@@ -582,17 +582,29 @@ int main(int argc, char **argv) {
 	cout << "This is Windows. Through visual studios" << endl;
 	string _bunny = "./res/assets/bunny.obj";
 	string _Boat = "./res/assets/Boat.obj";
+	string _dragon = "./res/assets/dragon.obj";
+	string _table = "./res/assets/table.obj";
+	string str = "./res/assets/test.png";
+	
 #else
 	cout << "This is Not Windows." << endl;
 	string _bunny = "work/res/assets/bunny.obj";
 	string _Boat = "work/res/assets/Boat.obj";
+	string _dragon = "work/res/assets/dragon.obj";
+	string _table = "work/res/assets/table.obj";
+	string str = "work/res/assets/test.png";
 #endif
 	
-	string str = "work/res/assets/test.png";
+	
 	Texture* t = new Texture(str);
 	
 	bunny = new Geometry(_bunny);
-	bunny->loadTexture("work/res/textures/output.png");
+	#ifdef _WIN32
+	bunny->loadTexture("./res/textures/output.png");
+	#else
+	bunny->loadTexture("work/res/textures/output.png");	
+	#endif
+	
 	bunny->translate(vec3(0, 0.95, 0));
 	bunny->setAmbient(vec3(0.25, 0.20725, 0.20725));
 	bunny->setDiffuse(vec3(1, 0.829, 0.829));
@@ -625,9 +637,13 @@ int main(int argc, char **argv) {
 	//torus->setSpecular(vec3(0.7, 0.6, 0.6));
 	//torus->setShine(0.25);
 	//
-	string _table = "work/res/assets/table.obj";
-	table = new Geometry(_table);
-	table->loadTexture("work/res/textures/output.png");
+	
+	table = new Geometry(_dragon);
+	#ifdef _WIN32
+	table->loadTexture("./res/textures/output.png");
+	#else
+	table->loadTexture("work/res/textures/output.png");	
+	#endif
 	table->changeScale(vec3(1.2, 1.2, 1.2));
 	table->translate(vec3(0, 0.4, 0));
 	table->setAmbient(vec3(0.21, 0.1275, 0.054));

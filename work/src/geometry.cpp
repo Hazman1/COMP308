@@ -54,7 +54,7 @@ Geometry::Geometry(string filename)
 
 
 	readNAB(nab);
-	readEDG(edg);
+	
 	
 	if (m_triangles.size() > 0)
 	{
@@ -64,9 +64,9 @@ Geometry::Geometry(string filename)
 
 	if (!(nabours.size() > 0)){
 		generateNabours();
-		WriteoutNab(temp);
+		WriteoutNab(nab);
 	}
-	
+	readEDG(edg);
 
 }
 
@@ -81,11 +81,13 @@ void Geometry::generateNabours(){
 					for (vertex k : t.v) {
 						if (k.p != i) {
 							n.push_back(k.p);
+							count++;
 						}
 						
 					}
-				}
+				}else{
 				count++;
+				}
 			}
 			nabours[i] = n;
 		}
