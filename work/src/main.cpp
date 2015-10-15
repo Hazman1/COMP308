@@ -662,8 +662,8 @@ int main(int argc, char **argv) {
 	// This will not return until we tell GLUT to finish
 	glutMainLoop();
 
-	//delete table;
-	//delete bunny;
+	delete table;
+	delete bunny;
 	delete boat;
 	//delete teapot;
 	//delete box;
