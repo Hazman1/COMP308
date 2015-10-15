@@ -51,9 +51,7 @@ Texture::Texture(std::string s){
 void Texture::makeHeatmap(){
 	for(unsigned int i=0; i<width; i++){
 		for(unsigned int j=0; j<height; j++){
-			float x= randomValue(i*j+i);
-			float y= randomValue(i*j+j);
-			heatMap[i][j] = abs(noiseMap(x, y));
+			heatMap[i][j] = abs(noiseMap(i, j));
 		}
 	}
 }
