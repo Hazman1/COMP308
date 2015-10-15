@@ -22,7 +22,7 @@ Texture::Texture(std::string s){
 	uint8_t *dMap;
 	dMap = (uint8_t*) calloc((width*height)*512, sizeof(uint8_t));
 	unsigned int x = 0;
-	int iters = 32;
+	int iters = 1024;
 	for(int l=1; l<5; l++){
 		for(int i=0; i<width;i=i+l){
 			for(int j=0; j<height;j++){
@@ -34,9 +34,9 @@ Texture::Texture(std::string s){
 
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
-			dMap[x * 3 + 0] = (uint8_t) (heatMap[i][j] * 255);
-			dMap[x * 3 + 1] = (uint8_t) (heatMap[i+1][j+1] * 255);
-			dMap[x * 3 + 2] = (uint8_t) (heatMap[i+2][j+2] * 255);
+			dMap[x * 3 + 0] = (uint8_t) ( (int)(heatMap[i][j] * 255) >> 32);
+			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 16);
+			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 8);
 			x++;
 		}
 	}
@@ -66,7 +66,7 @@ float Texture::smoothNoise(int iters, int x, int y, float pers, float scale, int
 	float noise = 0;
 
 	for(int i=0; i<iters;i++){
-		noise += noise2d(x*freq, y*freq);
+		noise += noise2d(x*freq+1, y*freq+1);
 		maxAmp += amp;
 		amp *= pers;
 		freq *= 2;
@@ -74,7 +74,7 @@ float Texture::smoothNoise(int iters, int x, int y, float pers, float scale, int
 
 	noise /= maxAmp;
 
-	 noise = noise * (high - low) / 2 + (high + low) / 2;
+	noise = noise * (high - low) / 2 + (high + low) / 2;
 	
 	return noise;
 }	
@@ -96,6 +96,7 @@ void Texture::generateGradiant(){
 }
 
 float Texture::randomValue(int val){
+	val = val*13;
 	int x = (val<<13) ^ val;
 	x = 1.0-((x*(x*x*15731 + 789221) + 1376312589) & 2147483647);
 	float z = x / 1073741824.0;
@@ -135,7 +136,20 @@ float Texture::dotGradient(int xi, int yi, float xf, float yf){
 }
 
 float Texture::noiseMap(float x, float y){
-	int x0 = (x >= 0.0 ? (int)x : (int)x-1);
+	float zr =0, zi=0;
+	int i=0;
+	for(;i<256;i++){
+		if(zr*zr + zi*zi > 4){
+			break;
+		}
+		float temp = zr *zr - zi*zi +x;
+		zi = 2*zr*zi+y;
+		zr = temp;
+	}
+
+	float j = (double)i / 256;
+	return (int)(pow(j, 0.6) * 255 +0.5) << 16 | (int)(pow(j, 0.3) * 255 +0.5) << 8 | (int)(pow(j, 0.1) *255 +0.5) << 2;
+	/*int x0 = (x >= 0.0 ? (int)x : (int)x-1);
 	int x1 = x0+1;
 	int y0 = (y >= 0.0 ? (int)y : (int)y-1);
 	int y1 = y0+1;
@@ -155,7 +169,7 @@ float Texture::noiseMap(float x, float y){
 	n2 = dotGradient(x1, y1, x, y);
 	n3 = dotGradient(x1+1, y1, x, y);
 	ix1 = cubicLerp(sx, n0, n1,n2,n3);
-	return lerp(sy, ix1, ix0);
+	return lerp(sy, ix1, ix0);*/
 }
 
 image* Texture::getImage(){
