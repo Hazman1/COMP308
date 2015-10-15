@@ -550,7 +550,7 @@ int main(int argc, char **argv) {
 
 	// Initialise window size and create window
 	glutInitWindowSize(g_winWidth, g_winHeight);
-	g_mainWindow = glutCreateWindow("COMP308 Assignment 3");
+	g_mainWindow = glutCreateWindow("Final Project");
 
 
 	// Initilise GLEW

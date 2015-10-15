@@ -25,7 +25,9 @@ Texture::Texture(std::string s){
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
 			cout <<"yes\n";
-			dMap[x] = (uint8_t) (heatMap[i][j] * 256);
+			dMap[x * 3 + 0] = (uint8_t) (heatMap[i][j] * 140);
+			dMap[x * 3 + 1] = (uint8_t) (heatMap[i+1][j+1] * 140);
+			dMap[x * 3 + 2] = (uint8_t) (heatMap[i+2][j+2] * 140);
 			x++;
 		}
 	}
