@@ -16,7 +16,7 @@
 
 #include <cmath>
 #include <iostream>
-#include <string>
+#include <string.h>
 #include <vector>
 #include "imageLoader.hpp"
 #include "comp308.hpp"
