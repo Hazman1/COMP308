@@ -233,6 +233,10 @@ void Geometry::readOBJ(string filename)
 	{
 		createNormals();
 	}
+
+	if (m_uvs.size() <= 1){
+		createUVS();
+	}
 	
 	cout << "Reading OBJ file is DONE." << endl;
 	cout << m_points.size() - 1 << " points" << endl;
@@ -252,6 +256,10 @@ void Geometry::readOBJ(string filename)
 	}
 
 
+}
+
+void Geometry::createUVS(){
+	
 }
 
 struct pNormals
