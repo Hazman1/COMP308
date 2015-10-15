@@ -62,8 +62,8 @@ bool g_useShader = false;
 //
 //Geometry *ball;
 //Geometry *box;
-Geometry *bunny;
-Geometry *boat;
+//Geometry *bunny;
+//Geometry *boat;
 //Geometry *sphere;
 Geometry *table;
 //Geometry *teapot;
@@ -84,9 +84,9 @@ void initLight() {
 
 
 	float direction[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float diff[] = { 0.5f, 0.8f, 0.5f, 1.0f };
-	float ambient[] = { 0.05f, 0.1f, 0.05f, 1.0f };
-	GLfloat specular[] = { 0.05f, 0.2f, 0.05f, 1.0f };
+	float diff[] = { 1.5f, 1.5f, 1.5f, 1.0f };
+	float ambient[] = { 0.05f, 0.05f, 0.05f, 1.0f };
+	GLfloat specular[] = { 0.05f, 0.05f, 0.05f, 1.0f };
 
 	glLightfv(GL_LIGHT0, GL_POSITION, direction);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
@@ -120,8 +120,10 @@ void initLight() {
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffintensity2);
 	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient2);
 	glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 6.0f);
-	float diffintensity3[] = { 0.3f, 0.3f, 0.3f, 1.0f };
-	float ambient3[] = { 0.6f, 0.6f, 0.6f, 1.0f };
+	
+	
+	float diffintensity3[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float ambient3[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	glLightfv(GL_LIGHT3, GL_DIFFUSE, diffintensity3);
 	glLightfv(GL_LIGHT3, GL_AMBIENT, ambient3);
@@ -220,18 +222,18 @@ void draw() {
 	if (!g_useShader) {
 
 
-		glPushMatrix();
-		bunny->renderGeometry(false);
-		glPopMatrix();
+	//	glPushMatrix();
+	//	bunny->renderGeometry(false);
+	//	glPopMatrix();
 
-		glPushMatrix();
-		glRotatef(120, 1, 0, 0);
+	//	glPushMatrix();
+	//	glRotatef(120, 1, 0, 0);
 		//glRotatef(15, 0, 0, 1);
-		glRotatef(180, 0, 1, 0);
-		glTranslatef(-5, 0, 0);
+	//	glRotatef(180, 0, 1, 0);
+	//	glTranslatef(-5, 0, 0);
 		
-		boat->renderGeometry(false);
-		glPopMatrix();
+	//	boat->renderGeometry(false);
+	//	glPopMatrix();
 		//glPushMatrix();
 		//torus->renderGeometry(false);
 		//glPopMatrix();
@@ -284,15 +286,15 @@ void draw() {
 		box->renderGeometry(true);
 		glPopMatrix();*/
 
-		glPushMatrix();
-		bunny->renderGeometry(true);
-		glPopMatrix();
+	//	glPushMatrix();
+	//	bunny->renderGeometry(true);
+	//	glPopMatrix();
 
-		glPushMatrix();
-		glRotatef(90, 1, 0, 0);
-		glRotatef(45, 0, 0, 1);
-		boat->renderGeometry(true);
-		glPopMatrix();
+	//	glPushMatrix();
+	//	glRotatef(90, 1, 0, 0);
+	//	glRotatef(45, 0, 0, 1);
+	//	boat->renderGeometry(true);
+	//	glPopMatrix();
 
 		/*glPushMatrix();
 		torus->renderGeometry(true);
@@ -459,8 +461,9 @@ void keyboardCallback(unsigned char key, int x, int y) {
 	}
 
 	if (key == ' ') {
-		bunny->laplaceSmooth();
-	}
+		//bunny->laplaceSmooth();
+		table->laplaceSmooth();
+	 }
 	if (key == 27)exit(0);
 
 	//101, 103
@@ -598,20 +601,20 @@ int main(int argc, char **argv) {
 	
 	Texture* t = new Texture(str);
 	
-	bunny = new Geometry(_bunny);
-	#ifdef _WIN32
-	bunny->loadTexture("./res/textures/output.png");
-	#else
-	bunny->loadTexture("work/res/textures/output.png");	
-	#endif
+	//bunny = new Geometry(_bunny);
+	//#ifdef _WIN32
+	//bunny->loadTexture("./res/textures/output.png");
+	//#else
+	//bunny->loadTexture("work/res/textures/output.png");	
+	//#endif
 	
-	bunny->translate(vec3(0, 0.95, 0));
-	bunny->setAmbient(vec3(0.25, 0.20725, 0.20725));
-	bunny->setDiffuse(vec3(1, 0.829, 0.829));
-	bunny->setSpecular(vec3(0.296648, 0.296648, 0.296648));
-	bunny->setShine(0.088);
+	//bunny->translate(vec3(0, 0.95, 0));
+	//bunny->setAmbient(vec3(0.25, 0.20725, 0.20725));
+	//bunny->setDiffuse(vec3(1, 0.829, 0.829));
+	//bunny->setSpecular(vec3(0.296648, 0.296648, 0.296648));
+	//bunny->setShine(0.088);
 	
-	boat = new Geometry(_Boat);
+	//boat = new Geometry(_Boat);
 
 	/*string _teapot = "./res/assets/teapot.obj";
 	teapot = new Geometry(_teapot);
@@ -663,8 +666,8 @@ int main(int argc, char **argv) {
 	glutMainLoop();
 
 	delete table;
-	delete bunny;
-	delete boat;
+	//delete bunny;
+	//delete boat;
 	//delete teapot;
 	//delete box;
 	//delete torus;
