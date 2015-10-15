@@ -61,7 +61,7 @@ Geometry::Geometry(string filename)
 		createDisplayListWire();
 			}
 
-	if (!nabours.size() > 0) {
+	if (!(nabours.size() > 0)){
 		generateNabours();
 		WriteoutNab(temp);
 	}
@@ -476,7 +476,7 @@ void Geometry::WriteoutNab(std::string temp)
 {
 	ofstream file;
 	file.open(temp);
-	for (int i = 0; i < nabours.size(); i++) {
+	for (uint i = 0; i < nabours.size(); i++) {
 		file << i << " ";
 		string t;
 		for (int k : nabours[i]) {

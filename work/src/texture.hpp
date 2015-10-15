@@ -11,6 +11,7 @@ class Texture{
 private:
 	image* Image;
 	float gradient[256][256];
+	float heatMap[256][256];
 	void generateHeightmap();
 	void generateTexture();
 	void generateGradiant();
@@ -19,6 +20,7 @@ private:
 	float randomValue(int);
 	float dotGradient(int, int, float, float);
 	float noiseMap(float, float);
+	void makeHeatmap();
 
 
 public:
