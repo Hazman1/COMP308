@@ -62,7 +62,7 @@ bool g_useShader = false;
 //
 //Geometry *ball;
 //Geometry *box;
-//Geometry *bunny;
+Geometry *bunny;
 Geometry *boat;
 //Geometry *sphere;
 Geometry *table;
