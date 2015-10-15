@@ -37,9 +37,9 @@ Texture::Texture(std::string s){
 
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
-			dMap[x * 3 + 0] = (uint8_t) ((int)(heatMap[i][j] * 255) >> 16);
-			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 16);
-			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 16);
+			dMap[x * 3 + 0] = (uint8_t) ((int)(heatMap[i][j] * 255) >> 12);
+			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 8);
+			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 4);
 			x++;
 		}
 	}
@@ -77,7 +77,8 @@ Texture::Texture(std::string s){
 #else
 	fout = fopen("work/res/textures/grad.png", "wb");
 #endif
-	
+
+	fout = fopen("work/res/textures/grad.png","wb");
 	struct TinyPngOut pngout2;
 	if (fout == NULL || TinyPngOut_init(&pngout2, fout, width, height) != TINYPNGOUT_OK)
 		cout << "error" << endl;
@@ -152,17 +153,16 @@ void Texture::setGrad(int i, int j){
 }
 
 void Texture::generateOnes(){
-	srand (time(NULL));
-	for(unsigned int i=1; i<height-1; i++){
-		int x = rand() % width-1 + 1;
-		int y = rand() % height-i + 1;
+	for(uint i=1; i<height-1; i++){
+		int x = ((int) (rand() % width-1)) + 1;
+		int y = ((int) (rand() % height-1)) + 1;
 		gradient[x][y] = 1.0;
 	}
 }
 
 bool Texture::noZeros(){
-	for(unsigned int i=1; i<width-1; i++){
-		for(unsigned int j=1; j<height-1; j++){
+	for(uint i=1; i<width-1; i++){
+		for(uint j=1; j<height-1; j++){
 			if(gradient[i][j] == 0){
 				return true;
 			}
@@ -179,6 +179,7 @@ void Texture::generateGradiant(){
 	}
 	generateOnes();
 	while(noZeros() && factor > 0){
+		
 		for(unsigned int i=1; i<width-1; i++){
 			for(unsigned int j=1; j<height-1; j++){
 				if(gradient[i][j] != 0){
