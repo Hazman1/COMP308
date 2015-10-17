@@ -57,20 +57,15 @@ GLuint g_texture1 = 0;
 GLuint g_shader = 0;
 bool g_useShader = false;
 
-
+int point =0;
+std::vector<Geometry *> Items;
 #ifdef _WIN32
-	string _bunny = "./res/assets/bunny.obj";
-	string _Boat = "./res/assets/Boat.obj";
-	string _dragon = "./res/assets/dragon.obj";
-	string _table = "./res/assets/table.obj";
+string _Item[] = { "./res/assets/bunny.obj" ,"./res/assets/Boat.obj",	"./res/assets/dragon.obj", "./res/assets/table.obj" };
 	string str = "./res/assets/test.png";
 
 #else
-	string _bunny = "work/res/assets/bunny.obj";
-	string _Boat = "work/res/assets/Boat.obj";
-	string _dragon = "work/res/assets/dragon.obj";
-	string _table = "work/res/assets/table.obj";
-	string str = "work/res/assets/test.png";
+string _Item[] = { "work/res/assets/bunny.obj" ,"work/res/assets/Boat.obj", "work/res/assets/dragon.obj", "work/res/assets/table.obj" };
+string str = "work/res/assets/test.png";
 #endif
 
 // Objects to be rendered
@@ -80,7 +75,7 @@ bool g_useShader = false;
 //Geometry *bunny;
 //Geometry *boat;
 //Geometry *sphere;
-Geometry *table;
+Geometry *active;
 //Geometry *teapot;
 //Geometry *torus;
 
@@ -175,6 +170,26 @@ void initLight() {
 
 }
 
+void geometrySetUp() {
+	if (Items.size() < 4) {
+		active = new Geometry(_Item[point]);
+		Items.push_back(active);
+	}
+	else {
+		active = Items.at(point);
+	}
+#ifdef _WIN32
+	active->loadTexture("./res/textures/output.png");
+#else
+	active->loadTexture("work/res/textures/output.png");
+#endif
+	active->changeScale(vec3(1.2, 1.2, 1.2));
+	active->translate(vec3(0, 0.4, 0));
+	active->setAmbient(vec3(0.329412, 0.223529, 0.027451));
+	active->setDiffuse(vec3(0.780392, 0.568627, 0.113725));
+	active->setSpecular(vec3(0.992157, 0.941176, 0.807843));
+	active->setShine(0.21794872);
+}
 
 
 // Sets up where the camera is in the scene
@@ -237,38 +252,12 @@ void draw() {
 	if (!g_useShader) {
 
 
-	//	glPushMatrix();
-	//	bunny->renderGeometry(false);
-	//	glPopMatrix();
-
-	//	glPushMatrix();
-	//	glRotatef(120, 1, 0, 0);
-		//glRotatef(15, 0, 0, 1);
-	//	glRotatef(180, 0, 1, 0);
-	//	glTranslatef(-5, 0, 0);
-
-	//	boat->renderGeometry(false);
-	//	glPopMatrix();
-		//glPushMatrix();
-		//torus->renderGeometry(false);
-		//glPopMatrix();
-
-		//glPushMatrix();
-		//ball->renderGeometry(false);
-		//glPopMatrix();
-
-		//glPushMatrix();
-		//teapot->renderGeometry(false);
-		//glPopMatrix();
 
 		glPushMatrix();
-		table->renderGeometry(false);
+		active->renderGeometry(false);
 		glPopMatrix();
 
-		//glPushMatrix();
-		//box->renderGeometry(false);
-		//glPopMatrix();
-
+	
 
 		glFlush();
 
@@ -294,34 +283,9 @@ void draw() {
 		//glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
 
 		glPushMatrix();
-		table->renderGeometry(true);
+		active->renderGeometry(true);
 		glPopMatrix();
 
-	/*	glPushMatrix();
-		box->renderGeometry(true);
-		glPopMatrix();*/
-
-	//	glPushMatrix();
-	//	bunny->renderGeometry(true);
-	//	glPopMatrix();
-
-	//	glPushMatrix();
-	//	glRotatef(90, 1, 0, 0);
-	//	glRotatef(45, 0, 0, 1);
-	//	boat->renderGeometry(true);
-	//	glPopMatrix();
-
-		/*glPushMatrix();
-		torus->renderGeometry(true);
-		glPopMatrix();
-
-		glPushMatrix();
-		ball->renderGeometry(true);
-		glPopMatrix();
-*/
-		//glPushMatrix();
-		//teapot->renderGeometry(true);
-		//glPopMatrix();
 
 		glFlush();
 
@@ -477,17 +441,23 @@ void keyboardCallback(unsigned char key, int x, int y) {
 
 	if (key == ' ') {
 		//bunny->laplaceSmooth();
-		table->laplaceSmooth();
+		active->laplaceSmooth();
 	 }
 	 
 	 if(key== 'n'){
 	  Texture* t = new Texture(str); 
 	  #ifdef _WIN32
-	table->loadTexture("./res/textures/output.png");
+	  active->loadTexture("./res/textures/output.png");
 	#else
-	table->loadTexture("work/res/textures/output.png");
+	  active->loadTexture("work/res/textures/output.png");
 	#endif
 	 }
+
+	 if (key == 'v') {
+		 point = (point + 1) % 4;
+		 geometrySetUp();
+	 }
+
 	 
 	if (key == 27)exit(0);
 
@@ -611,76 +581,18 @@ int main(int argc, char **argv) {
 
 	Texture* t = new Texture(str);
 
-	//bunny = new Geometry(_bunny);
-	//#ifdef _WIN32
-	//bunny->loadTexture("./res/textures/output.png");
-	//#else
-	//bunny->loadTexture("work/res/textures/output.png");
-	//#endif
 
-	//bunny->translate(vec3(0, 0.95, 0));
-	//bunny->setAmbient(vec3(0.25, 0.20725, 0.20725));
-	//bunny->setDiffuse(vec3(1, 0.829, 0.829));
-	//bunny->setSpecular(vec3(0.296648, 0.296648, 0.296648));
-	//bunny->setShine(0.088);
+	geometrySetUp();
 
-	//boat = new Geometry(_Boat);
-
-	/*string _teapot = "./res/assets/teapot.obj";
-	teapot = new Geometry(_teapot);
-	teapot->translate(vec3(-5.5, 0.9, -5.5));
-	teapot->setAmbient(vec3(0.054, 0.127, 0.2125));
-	teapot->setDiffuse(vec3(0.18144, 0.4284, 0.714));
-	teapot->setSpecular(vec3(0.166721, 0.271906, 0.393548));
-	teapot->setShine(0.2);*/
-
-	//string _ball = "./res/assets/sphere.obj";
-	//ball = new Geometry(_ball);
-	//ball->translate(vec3(-5.5, 2.3, 5.5));
-	//ball->setAmbient(vec3(0.2125, 0.1275, 0.054));
-	//ball->setDiffuse(vec3(0.714, 0.4284, 0.18144));
-	//ball->setSpecular(vec3(0.393548, 0.271906, 0.166721));
-	//ball->setShine(0.2);
-
-	//string _torus = "./res/assets/torus.obj";
-	//torus = new Geometry(_torus);
-	//torus->translate(vec3(5.5, 1.4, 5.5));
-	//torus->setAmbient(vec3(0.0, 0.0, 0.0));
-	//torus->setDiffuse(vec3(0.5, 0.0, 0.0));
-	//torus->setSpecular(vec3(0.7, 0.6, 0.6));
-	//torus->setShine(0.25);
-	//
-
-	table = new Geometry(_dragon);
-	#ifdef _WIN32
-	table->loadTexture("./res/textures/output.png");
-	#else
-	table->loadTexture("work/res/textures/output.png");
-	#endif
-	table->changeScale(vec3(1.2, 1.2, 1.2));
-	table->translate(vec3(0, 0.4, 0));
-	table->setAmbient(vec3(0.329412, 0.223529, 0.027451));
-	table->setDiffuse(vec3(0.780392, 0.568627, 0.113725));
-	table->setSpecular(vec3(0.992157,0.941176,0.807843));
-	table->setShine(0.21794872);
-	//
-	//string _box = "./res/assets/box.obj";
-	//box = new Geometry(_box);
-	//box->loadTexture("work/res/textures/brick.jpg");
-	//box->changeScale(vec3(2, 2, 2));
-	//box->rotate(vec4(0, 1, 0, 180));
-	//box->translate(vec3(-5.5, 2.9, 5.5));
-
+	
 	// Loop required by GLUT
 	// This will not return until we tell GLUT to finish
 	glutMainLoop();
-
-	delete table;
-	//delete bunny;
-	//delete boat;
-	//delete teapot;
-	//delete box;
-	//delete torus;
+	for (int i = 0; i < Items.size(); i++) {
+		delete (Items[i]);
+	}
+	delete active;
+	
 
 
 	// Don't forget to delete all pointers that we made

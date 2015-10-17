@@ -242,15 +242,8 @@ void Geometry::readOBJ(string filename)
             }
         }
     }
-    if (m_normals.size() < 1)
-    {
-        createNormals();
-    }
-
-    if (m_uvs.size() <= 1)
-    {
-        createUVS();
-    }
+  
+  
 
     cout << "Reading OBJ file is DONE." << endl;
     cout << m_points.size() - 1 << " points" << endl;
@@ -268,6 +261,12 @@ void Geometry::readOBJ(string filename)
         createNormals();
         cout << m_normals.size() - 1 << " normals" << endl;
     }
+
+	if (m_uvs.size() <= 1)
+	{
+		createUVS();
+		cout << m_uvs.size() - 1 << " uv coords" << endl;
+	}
 
 
 }
@@ -387,7 +386,7 @@ void Geometry::createNormals()
         }
         if (p.normals.size() > 0)
         {
-            cout<< "normal = "<<normal << "  p.normals.size() ="<< p.normals.size()<<endl;
+            //cout<< "normal = "<<normal << "  p.normals.size() ="<< p.normals.size()<<endl;
             normal /= vec3(p.normals.size());
         }
         m_normals.push_back(normal);//vec3((float)t));
@@ -810,23 +809,38 @@ void Geometry::laplaceSmooth()
     for (auto k : nabours)
     {
         int index = k.first;
-        vec3 a(0, 0, 0);
+		vec3 host = m_points.at(index);
+		vec3 a(0, 0, 0);
+		
         vector<int> nab = nabours[index];
-		int num = 0;
-		num = nab.size();
+		float num = 0;
+		bool flip = true;
         for (int k : nab)
         {
-            a = a + m_points.at(k);
+			float dist = distance(m_points.at(k), host);
+			num = num + dist;
+			if (dist == 0.0f) dist = 1;
+			vec3 x1 = (m_points.at(k) * dist);
+			if (flip) {
+				a = a + x1;
+				flip = false;
+			}
+			else {
+				a = a - x1;
+				flip = true;
+			}
+			
 			//a = a + sum(nabours[k]);
 			//num = nabours[k].size();
         }
 		
         if (num != 0)
         {
-            a = a / num;
-		
+            a = a * num;
+			a = a + host;
+			points[index] = a;
         }
-        points[index] = a;
+       
     }
     for (auto k : points)
     {
