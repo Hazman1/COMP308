@@ -264,7 +264,7 @@ void Geometry::readOBJ(string filename)
 
 	if (m_uvs.size() <= 1)
 	{
-		createUVS();
+ 		createUVS();
 		cout << m_uvs.size() - 1 << " uv coords" << endl;
 	}
 
@@ -276,7 +276,9 @@ void Geometry::createUVS()
     for(int i =0 ; i<m_triangles.size(); i++)
     {
         triangle t = m_triangles.at(i);
-        for(vertex k:t.v){
+		
+		for (int n = 0; n<3; n++){
+			vertex k = t.v[n];
         float r = 10;
         float nv = m_normals.at(k.n).x;
         float nu = m_normals.at(k.n).y;
@@ -289,7 +291,7 @@ void Geometry::createUVS()
         float v =  std::acos((x/r * std::sin(nv)))/2*pi();
 
         vec2 cat(u,v);
-        k.t=m_uvs.size();
+        m_triangles[i].v[n].t=m_uvs.size();
         m_uvs.push_back(cat);
         }
     }
@@ -631,7 +633,7 @@ void Geometry::readEDG(std::string filename)
 void Geometry::changeScale(comp308::vec3 s)
 {
     Scale = s;
-    createDisplayListPoly();
+   
 }
 
 void Geometry::initShader()
@@ -649,6 +651,8 @@ void Geometry::initShader()
 
 void Geometry::renderGeometry(bool shade)
 {
+
+	
     //-------------------------------------------------------------
     // [Assignment 1] :
     // When moving on to displaying your obj, comment out the
@@ -657,7 +661,9 @@ void Geometry::renderGeometry(bool shade)
     glPushMatrix();
     if (thereIsTexture == 1)
     {
-        // Enable Drawing texures
+		
+
+		// Enable Drawing texures
         glEnable(GL_TEXTURE_2D);
         // Use Texture as the color
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -665,7 +671,10 @@ void Geometry::renderGeometry(bool shade)
         glActiveTexture(GL_TEXTURE0);
         // Bind the texture
 
+
         glBindTexture(GL_TEXTURE_2D, g_texture);
+		
+
         if (shade)
         {
             //// Use the shader we made
@@ -682,7 +691,9 @@ void Geometry::renderGeometry(bool shade)
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
 
-
+	//glPushMatrix();
+	//glMatrixMode(GL_TEXTURE);
+	//glScalef(Scale.x, Scale.y, Scale.z);
 
     glMatrixMode(GL_MODELVIEW);
 
@@ -705,7 +716,7 @@ void Geometry::renderGeometry(bool shade)
             vec2 uvs = m_uvs.at(points.v[k].t);
             vec3 vect = m_points.at(points.v[k].p);
             glNormal3f(norm.x, norm.y, norm.z);
-            glTexCoord2f(uvs.x, uvs.y);
+            glTexCoord2f(uvs.x*Scale.x, uvs.y*Scale.y);
             glVertex3f(vect.x, vect.y, vect.z);
         }
         glEnd();
@@ -715,6 +726,7 @@ void Geometry::renderGeometry(bool shade)
     glDisable(GL_TEXTURE_2D);
 
     glPopMatrix();
+	glPopMatrix();
 
 }
 

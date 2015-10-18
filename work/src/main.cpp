@@ -56,8 +56,8 @@ float g_zoomFactor = 1.0;
 GLuint g_texture1 = 0;
 GLuint g_shader = 0;
 bool g_useShader = false;
-
-int point =0;
+vec3 scale(1.0f,1.0f,1.0f);
+int point =3;
 std::vector<Geometry *> Items;
 #ifdef _WIN32
 string _Item[] = { "./res/assets/bunny.obj" ,"./res/assets/Boat.obj",	"./res/assets/dragon.obj", "./res/assets/table.obj" };
@@ -183,7 +183,7 @@ void geometrySetUp() {
 #else
 	active->loadTexture("work/res/textures/output.png");
 #endif
-	active->changeScale(vec3(1.2, 1.2, 1.2));
+	active->changeScale(scale);
 	active->translate(vec3(0, 0.4, 0));
 	active->setAmbient(vec3(0.329412, 0.223529, 0.027451));
 	active->setDiffuse(vec3(0.780392, 0.568627, 0.113725));
@@ -404,20 +404,17 @@ void keyboardCallback(unsigned char key, int x, int y) {
 	}
 
 	if (key == '+') {
-		cutoff++;
-		if (cutoff<75.0f) {
-			base = (tan(radians(cutoff)) * 2);
-			cout << base << "\t" << cutoff << "\n";
-		}
-		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, cutoff);
+		vec3 temp(0.1f, 0.1f, 0.1f);
+		scale = scale + temp;
+		active->changeScale(scale);
+		cout << "Scale = " << scale << endl;
+
 	}
 	else if (key == '-'&&cutoff>0) {
-		cutoff--;
-		if (cutoff<75.0f) {
-			base = (tan(radians(cutoff)) * 2);
-			cout << base << "\t" << cutoff << "\n";
-		}
-		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, cutoff);
+		vec3 temp(0.1f, 0.1f, 0.1f);
+		scale = scale - temp;
+		active->changeScale(scale);
+		cout << "Scale = " << scale << endl;
 	}
 	cout << (int)key << "\n";
 	if (key == 'o') {
