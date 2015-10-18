@@ -257,7 +257,7 @@ void draw() {
 		active->renderGeometry(false);
 		glPopMatrix();
 
-	
+
 
 		glFlush();
 
@@ -379,28 +379,20 @@ void keyboardCallback(unsigned char key, int x, int y) {
 	//GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
 	if (key == 'w') {
 
-		lightPos[2] = lightPos[2] - 0.5f;
-		cout << lightPos[2] << "\n";
-		glLightfv(GL_LIGHT1, GL_POSITION, lightPos);
-	}
+	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+    }
 	else if (key == 's') {
 
-		lightPos[2] = lightPos[2] + 0.5f;
-		cout << lightPos[2] << "\n";
-		glLightfv(GL_LIGHT1, GL_POSITION, lightPos);
+		glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 	}
 
 	if (key == 'a') {
 
-		lightPos[0] = lightPos[0] - 0.5f;
-		cout << lightPos[0] << "\n";
-		glLightfv(GL_LIGHT1, GL_POSITION, lightPos);
-	}
-	else if (key == 'd') {
+    ;
+	}	else if (key == 'd') {
+    ;
 
-		lightPos[0] = lightPos[0] + 0.5f;
-		cout << lightPos[0] << "\n";
-		glLightfv(GL_LIGHT1, GL_POSITION, lightPos);
 	}
 
 	if (key == '+') {
@@ -440,9 +432,9 @@ void keyboardCallback(unsigned char key, int x, int y) {
 		//bunny->laplaceSmooth();
 		active->laplaceSmooth();
 	 }
-	 
+
 	 if(key== 'n'){
-	  Texture* t = new Texture(str); 
+	  Texture* t = new Texture(str);
 	  #ifdef _WIN32
 	  active->loadTexture("./res/textures/output.png");
 	#else
@@ -455,7 +447,7 @@ void keyboardCallback(unsigned char key, int x, int y) {
 		 geometrySetUp();
 	 }
 
-	 
+
 	if (key == 27)exit(0);
 
 	//101, 103
@@ -581,7 +573,7 @@ int main(int argc, char **argv) {
 
 	geometrySetUp();
 
-	
+
 	// Loop required by GLUT
 	// This will not return until we tell GLUT to finish
 	glutMainLoop();
@@ -589,7 +581,7 @@ int main(int argc, char **argv) {
 		delete (Items[i]);
 	}
 	delete active;
-	
+
 
 
 	// Don't forget to delete all pointers that we made
