@@ -27,8 +27,8 @@ Texture::Texture(std::string s){
 	unsigned int x = 0;
 	int iters = 1024;
 	for(int l=1; l<5; l++){
-		for(int i=0; i<width;i=i+l){
-			for(int j=0; j<height;j++){
+		for(int i=0; i<width; i=i+l){
+			for(int j=0; j<height; j++){
 				heatMap[i][j] = smoothNoise(iters, gradient[i][j], gradient[i][j], 0.5, 0.007, 0, 255);
 			}
 		}
@@ -37,9 +37,9 @@ Texture::Texture(std::string s){
 
 	for(int i=0; i<width;i++){
 		for(int j=0; j<height;j++){
-			dMap[x * 3 + 0] = (uint8_t) ((int)(heatMap[i][j] * 255) >> 12);
-			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 8);
-			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 4);
+			dMap[x * 3 + 0] = (uint8_t) ((int)(heatMap[i][j] * 255) >> 14);
+			dMap[x * 3 + 1] = (uint8_t) ((int)(heatMap[i+1][j+1] * 255) >> 14);
+			dMap[x * 3 + 2] = (uint8_t) ((int)(heatMap[i+2][j+2] * 255) >> 14);
 			x++;
 		}
 	}
@@ -116,8 +116,8 @@ float Texture::smoothNoise(int iters, float x, float y, float pers, float scale,
 }	
 
 void Texture::makeHeatmap(){
-	for(unsigned int i=0; i<width*3; i++){
-		for(unsigned int j=0; j<height*3; j++){
+	for(unsigned int i=0; i<width*3-1; i++){
+		for(unsigned int j=0; j<height*3-1; j++){
 			heatMap[i][j] = abs(noiseMap(i, j));
 		}
 	}
@@ -242,28 +242,7 @@ float Texture::noiseMap(float x, float y){
 	}
 
 	float j = (double)i / width;
-	return (int)(pow(j, 0.6) * 255 +0.5) << 12 | (int)(pow(j, 0.3) * 255 +0.5) << 8 | (int)(pow(j, 0.1) *255 +0.5) << 4;
-	/*int x0 = (x >= 0.0 ? (int)x : (int)x-1);
-	int x1 = x0+1;
-	int y0 = (y >= 0.0 ? (int)y : (int)y-1);
-	int y1 = y0+1;
-
-	float sx = x - (double)x0;
-	float sy = y - (double)y0;
-
-	float n0, n1, n2, n3, ix0, ix1, value;
-
-	n0 = dotGradient(x0, y0, x, y);
-	n1 = dotGradient(x1, y0, x, y);
-	n2 = dotGradient(x0, y1, x, y);
-	n3 = dotGradient(x1, y1, x, y);
-	ix0 = cubicLerp(sx, n0, n1,n2,n3);
-	n0 = dotGradient(x1, y1+1, x, y);
-	n1 = dotGradient(x1+1, y1+1, x, y);
-	n2 = dotGradient(x1, y1, x, y);
-	n3 = dotGradient(x1+1, y1, x, y);
-	ix1 = cubicLerp(sx, n0, n1,n2,n3);
-	return lerp(sy, ix1, ix0);*/
+	return (int)(pow(j, 0.6) * 255) << 14 | (int)(pow(j, 0.3) * 255) << 14 | (int)(pow(j, 0.1) *255) << 14;
 }
 
 image* Texture::getImage(){

@@ -14,7 +14,7 @@ class Texture{
 private:
 	image* Image;
 	float gradient[512][512];
-	float heatMap[256*3][256*3];
+	float heatMap[256*3-1][256*3-1];
 	void generateHeightmap();
 	void generateTexture();
 	void generateGradiant();

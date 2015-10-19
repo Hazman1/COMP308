@@ -185,10 +185,10 @@ void geometrySetUp() {
 #endif
 	active->changeScale(scale);
 	active->translate(vec3(0, 0.4, 0));
-	active->setAmbient(vec3(0.329412, 0.223529, 0.027451));
-	active->setDiffuse(vec3(0.780392, 0.568627, 0.113725));
-	active->setSpecular(vec3(0.992157, 0.941176, 0.807843));
-	active->setShine(0.21794872);
+	active->setAmbient(vec3(0.2125, 0.1275, 0.054));
+	active->setDiffuse(vec3(0.714, 0.4284, 0.18144));
+	active->setSpecular(vec3(0.393548, 0.271906, 0.166721));
+	active->setShine(0.2);
 }
 
 
