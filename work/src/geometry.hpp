@@ -74,7 +74,7 @@ private:
 	void readNAB(std::string);
 	void readEDG(std::string);
 	void createUVS();
-	comp308::vec3 sum(std::vector<int> t);
+	comp308::vec3 sum(comp308::vec3,std::vector<int> t);
 
 public:
 	Geometry(std::string);
