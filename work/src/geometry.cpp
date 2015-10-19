@@ -52,7 +52,7 @@ Geometry::Geometry(string filename)
     string nab = temp + "nab";
     string edg = temp + "edg";
 
-
+    readNAB(nab);
 
 
     if (m_triangles.size() > 0)
@@ -67,13 +67,13 @@ Geometry::Geometry(string filename)
         generateNabours();
         WriteoutNab(nab);
     }
-    //readEDG(edg);
-    //nabours.erase(m_points.size());
+    readEDG(edg);
+    nabours.erase(m_points.size());
 }
 
 void Geometry::generateNabours()
 {
-cout << "Generating Nabours hold on this will take a while"<<endl;
+    cout << "Generating Nabours hold on this will take a while"<<endl;
     long count = 0;
     //std::map<unsigned int, std::vector<int>> nabours;
     for (unsigned int i= 0; i < m_points.size(); i++)
@@ -380,7 +380,7 @@ void Geometry::createNormals()
     {
         pNormals p;
         p = Pnorm[i];
-       //v  cout << endl<< " Point "<< p.point << endl;
+        //v  cout << endl<< " Point "<< p.point << endl;
         vec3 normal(0.0f,0.0f,0.0f);
 
         for (unsigned int k = 0; k < p.normals.size(); k++)
@@ -398,7 +398,7 @@ void Geometry::createNormals()
         }
         else
         {
-           // cout << "rat tat"<<endl;
+            // cout << "rat tat"<<endl;
         }
 
         m_normals.push_back(normal);//vec3((float)t));
@@ -827,68 +827,72 @@ void Geometry::laplaceSmooth()
     //for (int ten = 0; ten < 10; ten++) {
     std::map<int, vec3> points;
 
-
-    for (auto p : nabours)
+    for(int i=0; i<10; i++)
     {
-        int index = p.first;
-         if(!(m_points[index].x == 0.0f)&&!(m_points[index].y == 0.0f)&&!(m_points[index].z==0.0f)){
-        vec3 host = m_points.at(index);
-        vec3 a(0, 0, 0);
-
-        vector<int> nab = nabours[index];
-        float num = nab.size();
-        bool flip = true;
-        for (int k : nab)
+        for (auto p : nabours)
         {
-            //num = num + dist;
-           if(!(m_points[k].x == 0.0f)&&!(m_points[k].y == 0.0f)&&!(m_points[k].z==0.0f))
+            int index = p.first;
+            if(!(m_points[index].x == 0.0f)&&!(m_points[index].y == 0.0f)&&!(m_points[index].z==0.0f))
             {
-            vec3 x1 = m_points.at(k);///num;
+                vec3 host = m_points.at(index);
+                vec3 a(0, 0, 0);
+
+                vector<int> nab = nabours[index];
+                float num = nab.size();
+                int flip = 0;
+                for (int k : nab)
+                {
+                    //num = num + dist;
+                    if(!(m_points[k].x == 0.0f)&&!(m_points[k].y == 0.0f)&&!(m_points[k].z==0.0f))
+                    {
+                        vec3 x1 = m_points.at(k);///num;
 //
-            if (flip)
-            {
-                a = x1 + host;
-                flip = false;
-            }
-            else
-            {
-                a = x1 - host;
-                flip = true;
-            }
-            }
-            //a = a + sum(nabours[k]);
-            //num = nabours[k].size();
-        }
+//            if (flip%4>2)
+//            {
+//                a = (x1 + host)/4;
+//
+//            }
+//            else
+//            {
+                        a = (x1 - host)*distance(host,x1);
+                       // a = a - sum(m_points[k],nabours[k]);
+                        // }
+                        flip++;
+                    }
 
-        if (num != 0)
+                    //num = nabours[k].size();
+                }
+
+                if (num != 0)
+                {
+                    a = a / num;
+                    a = a +host;
+                    cout<< "new Vector= "<<a << " old vector = " <<host<< endl;
+                    points[index] = a;
+                    //m_points[index]= a;
+                }
+            }
+
+        }
+        for (auto k : points)
         {
-             a = a / num;
-            a = a +host;
-            cout<< "new Vector= "<<a << " old vector = " <<host<< endl;
-            points[index] = a;
-            //m_points[index]= a;
+            m_points[k.first] = k.second;
         }
-        }
-
     }
-    for (auto k : points)
-    {
-        m_points[k.first] = k.second;
-    }
-
     createNormals();
     createUVS();
     //}
     //createDisplayListPoly();
 }
 
-comp308::vec3 Geometry::sum(std::vector<int> t)
+comp308::vec3 Geometry::sum(comp308::vec3 host,std::vector<int> t)
 {
     vec3 a(0, 0, 0);
+
     for (int k : t)
     {
-        a = a + m_points.at(k);
-
+        vec3 x1 = m_points.at(k);
+        a = (x1 - host)/2;
     }
     return a;
 }
