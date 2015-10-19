@@ -53,7 +53,6 @@ Geometry::Geometry(string filename)
     string edg = temp + "edg";
 
 
-    readNAB(nab);
 
 
     if (m_triangles.size() > 0)
@@ -68,12 +67,13 @@ Geometry::Geometry(string filename)
         generateNabours();
         WriteoutNab(nab);
     }
-    readEDG(edg);
-	nabours.erase(m_points.size());
+    //readEDG(edg);
+    //nabours.erase(m_points.size());
 }
 
 void Geometry::generateNabours()
 {
+cout << "Generating Nabours hold on this will take a while"<<endl;
     long count = 0;
     //std::map<unsigned int, std::vector<int>> nabours;
     for (unsigned int i= 0; i < m_points.size(); i++)
@@ -262,11 +262,11 @@ void Geometry::readOBJ(string filename)
         cout << m_normals.size() - 1 << " normals" << endl;
     }
 
-	if (m_uvs.size() <= 1)
-	{
- 		createUVS();
-		cout << m_uvs.size() - 1 << " uv coords" << endl;
-	}
+    if (m_uvs.size() <= 1)
+    {
+        createUVS();
+        cout << m_uvs.size() - 1 << " uv coords" << endl;
+    }
 
 
 }
@@ -277,22 +277,23 @@ void Geometry::createUVS()
     {
         triangle t = m_triangles.at(i);
 
-		for (int n = 0; n<3; n++){
-			vertex k = t.v[n];
-        float r = 10;
-        float nv = m_normals.at(k.n).x;
-        float nu = m_normals.at(k.n).y;
+        for (int n = 0; n<3; n++)
+        {
+            vertex k = t.v[n];
+            float r = 10;
+            float nv = m_normals.at(k.n).x;
+            float nu = m_normals.at(k.n).y;
 
-        float x = r*std::sin(nv) * std::cos(2*nu);
-        float y = r*std::sin(nv) * std::sin(2*nu);
-        float z = r*std::cos(nv);
+            float x = r*std::sin(nv) * std::cos(2*nu);
+            float y = r*std::sin(nv) * std::sin(2*nu);
+            float z = r*std::cos(nv);
 
-        float u =  std::acos(z/r)/ pi();
-        float v =  std::acos((x/r * std::sin(nv)))/2*pi();
+            float u =  std::acos(z/r)/ pi();
+            float v =  std::acos((x/r * std::sin(nv)))/2*pi();
 
-        vec2 cat(u,v);
-        m_triangles[i].v[n].t=m_uvs.size();
-        m_uvs.push_back(cat);
+            vec2 cat(u,v);
+            m_triangles[i].v[n].t=m_uvs.size();
+            m_uvs.push_back(cat);
         }
     }
 
@@ -374,27 +375,30 @@ void Geometry::createNormals()
         // Pnorm is up dating
     }
 
-    cout << "Point Normals " << Pnorm.size() << endl;
+    //cout << "Point Normals " << Pnorm.size() << endl;
     for (i = 0; i < Pnorm.size(); i++)
     {
         pNormals p;
         p = Pnorm[i];
-            cout << endl<< " Point "<< p.point << endl;
+       //v  cout << endl<< " Point "<< p.point << endl;
         vec3 normal(0.0f,0.0f,0.0f);
 
         for (unsigned int k = 0; k < p.normals.size(); k++)
         {
 
-            cout << normalize(normals.at(p.normals.at(k))) << " lolololo"<<endl;
-            cout << normal << \n;
-            normal += normalize(normals.at(p.normals.at(k)));
+            if(!(normals.at(p.normals.at(k)).x == 0.0f)&&!(normals.at(p.normals.at(k)).y == 0.0f)&&!(normals.at(p.normals.at(k)).z==0.0f))
+            {
+                normal += normalize(normals.at(p.normals.at(k)));
+            }
         }
         if (p.normals.size() > 0)
         {
-            cout<< "normal = "<<normal << "  p.normals.size() ="<< p.normals.size()<<endl;
+            //cout<< "normal = "<<normal << "  p.normals.size() ="<< p.normals.size()<<endl;
             normal /= vec3(p.normals.size());
-        }else {
-        cout << "rat tat"<<endl;
+        }
+        else
+        {
+           // cout << "rat tat"<<endl;
         }
 
         m_normals.push_back(normal);//vec3((float)t));
@@ -669,7 +673,7 @@ void Geometry::renderGeometry(bool shade)
     {
 
 
-		// Enable Drawing texures
+        // Enable Drawing texures
         glEnable(GL_TEXTURE_2D);
         // Use Texture as the color
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -697,9 +701,9 @@ void Geometry::renderGeometry(bool shade)
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
 
-	//glPushMatrix();
-	//glMatrixMode(GL_TEXTURE);
-	//glScalef(Scale.x, Scale.y, Scale.z);
+    //glPushMatrix();
+    //glMatrixMode(GL_TEXTURE);
+    //glScalef(Scale.x, Scale.y, Scale.z);
 
     glMatrixMode(GL_MODELVIEW);
 
@@ -732,9 +736,9 @@ void Geometry::renderGeometry(bool shade)
     glDisable(GL_TEXTURE_2D);
 
     glPopMatrix();
-	glPopMatrix();
 
 }
+
 
 
 void Geometry::toggleWireFrame()
@@ -824,42 +828,47 @@ void Geometry::laplaceSmooth()
     std::map<int, vec3> points;
 
 
-    for (auto k : nabours)
+    for (auto p : nabours)
     {
-        int index = k.first;
-		vec3 host = m_points.at(index);
-		vec3 a(0, 0, 0);
+        int index = p.first;
+         if(!(m_points[index].x == 0.0f)&&!(m_points[index].y == 0.0f)&&!(m_points[index].z==0.0f)){
+        vec3 host = m_points.at(index);
+        vec3 a(0, 0, 0);
 
         vector<int> nab = nabours[index];
-		float num = nab.size();
-		bool flip = true;
+        float num = nab.size();
+        bool flip = true;
         for (int k : nab)
         {
-			//num = num + dist;
-
-			vec3 x1 = m_points.at(k)/4;
-			if (flip) {
-				a = a + x1;
-				flip = false;
-			}
-			else {
-				a = a - x1;
-				flip = true;
-			}
-
-			//a = a + sum(nabours[k]);
-			//num = nabours[k].size();
+            //num = num + dist;
+           if(!(m_points[k].x == 0.0f)&&!(m_points[k].y == 0.0f)&&!(m_points[k].z==0.0f))
+            {
+            vec3 x1 = m_points.at(k);///num;
+//
+            if (flip)
+            {
+                a = x1 + host;
+                flip = false;
+            }
+            else
+            {
+                a = x1 - host;
+                flip = true;
+            }
+            }
+            //a = a + sum(nabours[k]);
+            //num = nabours[k].size();
         }
 
         if (num != 0)
         {
-           // a = a / num;
-			a = a - host;
+             a = a / num;
+            a = a +host;
             cout<< "new Vector= "<<a << " old vector = " <<host<< endl;
-			points[index] = a;
-			//m_points[index]= a;
+            points[index] = a;
+            //m_points[index]= a;
         }
-
+        }
 
     }
     for (auto k : points)
@@ -867,8 +876,8 @@ void Geometry::laplaceSmooth()
         m_points[k.first] = k.second;
     }
 
-	createNormals();
-	createUVS();
+    createNormals();
+    createUVS();
     //}
     //createDisplayListPoly();
 }
