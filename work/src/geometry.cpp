@@ -386,7 +386,7 @@ void Geometry::createNormals()
         {
 
             cout << normalize(normals.at(p.normals.at(k))) << " lolololo"<<endl;
-            cout << normal << \n;
+            cout << normal << "\n";
             normal += normalize(normals.at(p.normals.at(k)));
         }
         if (p.normals.size() > 0)
