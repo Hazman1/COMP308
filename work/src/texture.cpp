@@ -29,7 +29,7 @@ Texture::Texture(std::string s){
 	for(int l=1; l<5; l++){
 		for(int i=0; i<width; i=i+l){
 			for(int j=0; j<height; j++){
-				heatMap[i][j] = smoothNoise(iters, gradient[i][j], gradient[j][i], 0.5, 0.007, 0, 255);
+				heatMap[i][j] = smoothNoise(iters, gradient[i][j], gradient[i][j], 0.5, 0.007, 0, 255);
 			}
 		}
 		iters/2;
