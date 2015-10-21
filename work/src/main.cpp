@@ -184,7 +184,13 @@ void geometrySetUp() {
 	active->loadTexture("work/res/textures/output.png");
 #endif
 	active->changeScale(scale);
-	active->translate(vec3(0, 0.4, 0));
+	if (point == 1) {
+		active->translate(vec3(-0.2, 0, 0));
+		active->rotate(vec4(90,0,1,0));
+	}
+	else {
+		active->translate(vec3(0, 0.4, 0));
+	}
 	active->setAmbient(vec3(0.2125, 0.1275, 0.054));
 	active->setDiffuse(vec3(0.714, 0.4284, 0.18144));
 	active->setSpecular(vec3(0.0, 0.0, 0.0));
@@ -289,20 +295,6 @@ void draw() {
 
 		glFlush();
 
-		//// Render a single square as our geometry
-		//// You would normally render your geometry here
-		//glBegin(GL_QUADS);
-		//glNormal3f(0.0, 0.0, 1.0);
-		//glTexCoord2f(0.0, 0.0);
-		//glVertex3f(-5.0, -5.0, 0.0);
-		//glTexCoord2f(0.0, 1.0);
-		//glVertex3f(-5.0, 5.0, 0.0);
-		//glTexCoord2f(1.0, 1.0);
-		//glVertex3f(5.0, 5.0, 0.0);
-		//glTexCoord2f(1.0, 0.0);
-		//glVertex3f(5.0, -5.0, 0.0);
-		//glEnd();
-		glFlush();
 
 		// Unbind our shader
 		glUseProgram(0);
@@ -368,7 +360,7 @@ void keyboardCallback(unsigned char key, int x, int y) {
 		}
 	}
 	else if (key == '4') {
-		if (light3) {http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
+		if (light3) {
 			light3 = false;
 		}
 		else {
@@ -379,20 +371,12 @@ void keyboardCallback(unsigned char key, int x, int y) {
 	//GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
 	if (key == 'w') {
 
-	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    }
+	}
 	else if (key == 's') {
 
-		glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-	}
-
-	if (key == 'a') {
-
-    ;
-	}	else if (key == 'd') {
-    ;
-
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	if (key == '+') {
@@ -402,58 +386,39 @@ void keyboardCallback(unsigned char key, int x, int y) {
 		cout << "Scale = " << scale << endl;
 
 	}
-	else if (key == '-'&&cutoff>0) {
+	else if (key == '-'&&cutoff > 0) {
 		vec3 temp(0.1f, 0.1f, 0.1f);
 		scale = scale - temp;
+		if (scale.x < 0)scale = vec3(0.0f, 0.0f, 0.0f);
 		active->changeScale(scale);
 		cout << "Scale = " << scale << endl;
 	}
+
 	cout << (int)key << "\n";
-	if (key == 'o') {
-		//move um in z
 
-		spotDir[2] = spotDir[2] - 0.1f;
-	}
-	else if (key == 'l') {
-		//move down in z
-		spotDir[2] = spotDir[2] + 0.1f;
-	}
-
-	if (key == 'k') {
-		//move up in x
-		spotDir[0] = spotDir[0] - 0.1f;
-	}
-	else if (key == ';') {
-		//move down in x
-		spotDir[0] = spotDir[0] + 0.1f;
-	}
 
 	if (key == ' ') {
 		//bunny->laplaceSmooth();
 		active->laplaceSmooth();
-	 }
+	}
 
-	 if(key== 'n'){
-	  Texture* t = new Texture(str);
-	  #ifdef _WIN32
-	  active->loadTexture("./res/textures/output.png");
-	#else
-	  active->loadTexture("work/res/textures/output.png");
-	#endif
-	 }
+	if (key == 'n') {
+		Texture* t = new Texture(str);
+#ifdef _WIN32
+		active->loadTexture("./res/textures/output.png");
+#else
+		active->loadTexture("work/res/textures/output.png");
+#endif
+	}
 
-	 if (key == 'v') {
-		 point = (point + 1) % 4;
-		 geometrySetUp();
-	 }
+	if (key == 'v') {
+		point = (point + 1) % 4;
+		geometrySetUp();
+	}
 
 
 	if (key == 27)exit(0);
 
-	//101, 103
-	//100, 102
-	// YOUR CODE GOES HERE
-	// ...
 }
 
 
