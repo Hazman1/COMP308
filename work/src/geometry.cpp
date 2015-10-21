@@ -385,8 +385,6 @@ void Geometry::createNormals()
 
         for (unsigned int k = 0; k < p.normals.size(); k++)
         {
-            cout << normalize(normals.at(p.normals.at(k))) << " lolololo"<<endl;
-            cout << normal << "\n";
             normal += normalize(normals.at(p.normals.at(k)));
             if(!(normals.at(p.normals.at(k)).x == 0.0f)&&!(normals.at(p.normals.at(k)).y == 0.0f)&&!(normals.at(p.normals.at(k)).z==0.0f))
             {
@@ -869,7 +867,6 @@ void Geometry::laplaceSmooth()
                 {
                     a = a / num;
                     a = a +host;
-                    cout<< "new Vector= "<<a << " old vector = " <<host<< endl;
                     points[index] = a;
                     //m_points[index]= a;
                 }
