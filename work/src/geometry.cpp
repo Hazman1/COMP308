@@ -400,7 +400,11 @@ void Geometry::createNormals()
             //cout<< "normal = "<<normal << "  p.normals.size() ="<< p.normals.size()<<endl;
             normal /= vec3(p.normals.size());
         }
-       
+        else
+        {
+            // cout << "rat tat"<<endl;
+        }
+
 
         m_normals.push_back(normal);//vec3((float)t));
 
@@ -449,7 +453,7 @@ void Geometry::createDisplayListPoly()
 {
     // Delete old list if there is one
     if (m_displayListPoly) glDeleteLists(m_displayListPoly, 1);
-   
+
 
 
     // Create a new list
@@ -709,7 +713,7 @@ void Geometry::renderGeometry(bool shade)
 
     glTranslatef(Translation.x, Translation.y, Translation.z);
     
-	glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
 	glCallList(m_displayListPoly);
 
     glDisable(GL_TEXTURE_2D);
@@ -784,9 +788,10 @@ void Geometry::clearTransList()
 
 /*
 		http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
-		http://graphics.stanford.edu/courses/cs468-12-spring/LectureSlides/06_smoothing.pdf
-		http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
-		https://en.wikipedia.org/wiki/Additive_smoothing
+	http://graphics.stanford.edu/courses/cs468-12-spring/LectureSlides/06_smoothing.pdf
+	http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
+	https://en.wikipedia.org/wiki/Additive_smoothing
+
 		https://en.wikipedia.org/wiki/Laplacian_smoothing
 		From Wikipedia, the free encyclopedia
 		This article is about the mesh smoothing algorithm.For the multinomial shrinkage estimator, also called Laplace smoothing or add - one smoothing, see additive smoothing.
@@ -829,10 +834,10 @@ void Geometry::laplaceSmooth()
                 {
                     a = a / num;
                     a = a +host;
-                   // cout<< "new Vector= "<<a << " old vector = " <<host<< endl;
                     points[index] = a;
                 }
             }
+
         }
         for (auto k : points)
         {
