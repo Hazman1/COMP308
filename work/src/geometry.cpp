@@ -385,10 +385,12 @@ void Geometry::createNormals()
 
         for (unsigned int k = 0; k < p.normals.size(); k++)
         {
-            cout << normalize(normals.at(p.normals.at(k))) << " lolololo"<<endl;
-            cout << normal << "\n";
-            normal += normalize(normals.at(p.normals.at(k)));
-            if(!(normals.at(p.normals.at(k)).x == 0.0f)&&!(normals.at(p.normals.at(k)).y == 0.0f)&&!(normals.at(p.normals.at(k)).z==0.0f))
+           // cout << normalize(normals.at(p.normals.at(k))) << " lolololo"<<endl;
+           // cout << normal << "\n";
+            //normal += normalize(normals.at(p.normals.at(k)));
+            if(!(normals.at(p.normals.at(k)).x == 0.0f)&&
+				!(normals.at(p.normals.at(k)).y == 0.0f)&&
+				!(normals.at(p.normals.at(k)).z==0.0f))
             {
                 normal += normalize(normals.at(p.normals.at(k)));
             }
@@ -398,10 +400,7 @@ void Geometry::createNormals()
             //cout<< "normal = "<<normal << "  p.normals.size() ="<< p.normals.size()<<endl;
             normal /= vec3(p.normals.size());
         }
-        else
-        {
-            // cout << "rat tat"<<endl;
-        }
+       
 
         m_normals.push_back(normal);//vec3((float)t));
 
@@ -450,9 +449,7 @@ void Geometry::createDisplayListPoly()
 {
     // Delete old list if there is one
     if (m_displayListPoly) glDeleteLists(m_displayListPoly, 1);
-    glPushMatrix();
-    glMatrixMode(GL_TEXTURE);
-    glScalef(Scale.x, Scale.y, Scale.z);
+   
 
 
     // Create a new list
@@ -475,7 +472,7 @@ void Geometry::createDisplayListPoly()
             vec3 vect = m_points.at(points.v[k].p);
 
             glNormal3f(norm.x, norm.y, norm.z);
-            glTexCoord2f(uvs.x, uvs.y);
+            glTexCoord2f(uvs.x*Scale.x, uvs.y*Scale.y);
             glVertex3f(vect.x, vect.y, vect.z);
 
         }
@@ -645,6 +642,7 @@ void Geometry::readEDG(std::string filename)
 void Geometry::changeScale(comp308::vec3 s)
 {
     Scale = s;
+	createDisplayListPoly();
 
 }
 
@@ -703,37 +701,16 @@ void Geometry::renderGeometry(bool shade)
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
 
-    //glPushMatrix();
-    //glMatrixMode(GL_TEXTURE);
-    //glScalef(Scale.x, Scale.y, Scale.z);
+
 
     glMatrixMode(GL_MODELVIEW);
 
     glRotatef(Rotation.w, Rotation.x, Rotation.y, Rotation.z);
 
     glTranslatef(Translation.x, Translation.y, Translation.z);
-    glShadeModel(GL_SMOOTH);
-
-    glPushMatrix();
-    unsigned int i;
-    for (i = 0; i < m_triangles.size(); i++)
-    {
-        glBegin(GL_TRIANGLES);
-
-        triangle points = m_triangles.at(i);
-
-        for (int k = 0; k < 3; k++)
-        {
-            vec3 norm = m_normals.at(points.v[k].n);
-            vec2 uvs = m_uvs.at(points.v[k].t);
-            vec3 vect = m_points.at(points.v[k].p);
-            glNormal3f(norm.x, norm.y, norm.z);
-            glTexCoord2f(uvs.x*Scale.x, uvs.y*Scale.y);
-            glVertex3f(vect.x, vect.y, vect.z);
-        }
-        glEnd();
-    }
-    glPopMatrix();
+    
+	glShadeModel(GL_SMOOTH);
+	glCallList(m_displayListPoly);
 
     glDisable(GL_TEXTURE_2D);
 
@@ -806,12 +783,10 @@ void Geometry::clearTransList()
 
 
 /*
-	http://graphics.stanford.edu/courses/cs468-12-spring/LectureSlides/06_smoothing.pdf
-
-	http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
-
-	https://en.wikipedia.org/wiki/Additive_smoothing
-
+		http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
+		http://graphics.stanford.edu/courses/cs468-12-spring/LectureSlides/06_smoothing.pdf
+		http://www.faculty.jacobs-university.de/llinsen/teaching/320491/Lecture13.pdf
+		https://en.wikipedia.org/wiki/Additive_smoothing
 		https://en.wikipedia.org/wiki/Laplacian_smoothing
 		From Wikipedia, the free encyclopedia
 		This article is about the mesh smoothing algorithm.For the multinomial shrinkage estimator, also called Laplace smoothing or add - one smoothing, see additive smoothing.
@@ -838,43 +813,26 @@ void Geometry::laplaceSmooth()
             {
                 vec3 host = m_points.at(index);
                 vec3 a(0, 0, 0);
-
                 vector<int> nab = nabours[index];
                 float num = nab.size();
-                int flip = 0;
+                
                 for (int k : nab)
                 {
-                    //num = num + dist;
+                    
                     if(!(m_points[k].x == 0.0f)&&!(m_points[k].y == 0.0f)&&!(m_points[k].z==0.0f))
                     {
-                        vec3 x1 = m_points.at(k);///num;
-//
-//            if (flip%4>2)
-//            {
-//                a = (x1 + host)/4;
-//
-//            }
-//            else
-//            {
+                        vec3 x1 = m_points.at(k);
                         a = (x1 - host)*distance(host,x1);
-                       // a = a - sum(m_points[k],nabours[k]);
-                        // }
-                        flip++;
                     }
-
-                    //num = nabours[k].size();
                 }
-
                 if (num != 0)
                 {
                     a = a / num;
                     a = a +host;
-                    cout<< "new Vector= "<<a << " old vector = " <<host<< endl;
+                   // cout<< "new Vector= "<<a << " old vector = " <<host<< endl;
                     points[index] = a;
-                    //m_points[index]= a;
                 }
             }
-
         }
         for (auto k : points)
         {
@@ -884,7 +842,7 @@ void Geometry::laplaceSmooth()
     createNormals();
     createUVS();
     //}
-    //createDisplayListPoly();
+    createDisplayListPoly();
 }
 
 comp308::vec3 Geometry::sum(comp308::vec3 host,std::vector<int> t)
